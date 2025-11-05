@@ -2,6 +2,7 @@ package antimomandorino.mypokedex.security;
 
 import antimomandorino.mypokedex.entities.User;
 import antimomandorino.mypokedex.exceptions.UnauthorizedException;
+import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;
@@ -29,7 +30,7 @@ public class JWTTools {
             Jwts.parser()
                     .verifyWith(Keys.hmacShaKeyFor(keySecret.getBytes()))
                     .build().parse(accessToken);
-        } catch (Exception ex) {
+        } catch (JwtException ex) {
             throw new UnauthorizedException("Invalid or expired token. Please sign in again.");
         }
     }
@@ -39,7 +40,7 @@ public class JWTTools {
             return Long.parseLong(Jwts.parser()
                     .verifyWith(Keys.hmacShaKeyFor(keySecret.getBytes()))
                     .build().parseSignedClaims(accessToken).getPayload().getSubject());
-        } catch (Exception ex) {
+        } catch (JwtException ex) {
             throw new UnauthorizedException("Invalid user ID in token.");
         }
     }
