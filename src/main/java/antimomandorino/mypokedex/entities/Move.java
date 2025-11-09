@@ -3,6 +3,9 @@ package antimomandorino.mypokedex.entities;
 import jakarta.persistence.*;
 import lombok.NoArgsConstructor;
 
+import java.util.HashSet;
+import java.util.Set;
+
 @Entity
 @Table(name = "moves")
 @NoArgsConstructor
@@ -12,7 +15,7 @@ public class Move {
     @Column(name = "id_move")
     private int idMove;
     private String name;
-    @Lob
+    @Column(columnDefinition = "TEXT")
     private String description;
     private int power;
     private int accuracy;
@@ -20,6 +23,9 @@ public class Move {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_type")
     private Type type;
+
+    @ManyToMany(mappedBy = "learnableMoves")
+    private Set<Pokemon> learnedByPokemon = new HashSet<>();
 
 
     public Move(int idMove, String name, String description, int power, int accuracy, Type type) {
@@ -74,6 +80,14 @@ public class Move {
 
     public void setType(Type type) {
         this.type = type;
+    }
+
+    public Set<Pokemon> getLearnedByPokemon() {
+        return learnedByPokemon;
+    }
+
+    public void setLearnedByPokemon(Set<Pokemon> learnedByPokemon) {
+        this.learnedByPokemon = learnedByPokemon;
     }
 
     @Override

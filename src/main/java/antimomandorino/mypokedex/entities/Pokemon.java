@@ -3,6 +3,7 @@ package antimomandorino.mypokedex.entities;
 import jakarta.persistence.*;
 import lombok.NoArgsConstructor;
 
+import java.util.HashSet;
 import java.util.Set;
 
 @Entity
@@ -18,7 +19,6 @@ public class Pokemon {
     private int height;
     private int weight;
 
-    @Lob
     private String description;
     @Column(name = "species_category")
     private String speciesCategory;
@@ -50,10 +50,19 @@ public class Pokemon {
     )
     private Set<Ability> abilities;
 
+    @ManyToMany
+    @JoinTable(
+            name = "pokemon_moves",
+            joinColumns = @JoinColumn(name = "id_pokemon"),
+            inverseJoinColumns = @JoinColumn(name = "move_id")
+    )
+    private Set<Move> learnableMoves = new HashSet<>();
+
     @OneToMany(mappedBy = "pokemon", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private Set<UserPokemon> userCollections;
 
-    public Pokemon(String name, int height, int weight, String description, String speciesCategory, String spriteUrl, String spriteShinyUrl, Type type1, Type type2, Stat stats, Set<Ability> abilities, Set<UserPokemon> userCollections) {
+    public Pokemon(int idPokemon, String name, int height, int weight, String description, String speciesCategory, String spriteUrl, String spriteShinyUrl, Type type1, Type type2, Set<Ability> abilities, Set<Move> learnableMoves) {
+        this.idPokemon = idPokemon;
         this.name = name;
         this.height = height;
         this.weight = weight;
@@ -63,9 +72,8 @@ public class Pokemon {
         this.spriteShinyUrl = spriteShinyUrl;
         this.type1 = type1;
         this.type2 = type2;
-        this.stats = stats;
         this.abilities = abilities;
-        this.userCollections = userCollections;
+        this.learnableMoves = learnableMoves;
     }
 
     public int getIdPokemon() {
@@ -150,7 +158,11 @@ public class Pokemon {
     }
 
     public void setStats(Stat stats) {
+
         this.stats = stats;
+        if (stats != null) {
+            stats.setPokemon(this);
+        }
     }
 
     public Set<Ability> getAbilities() {
@@ -168,6 +180,16 @@ public class Pokemon {
     public void setUserCollections(Set<UserPokemon> userCollections) {
         this.userCollections = userCollections;
     }
+
+
+    public Set<Move> getLearnableMoves() {
+        return learnableMoves;
+    }
+
+    public void setLearnableMoves(Set<Move> learnableMoves) {
+        this.learnableMoves = learnableMoves;
+    }
+
 
     @Override
     public String toString() {

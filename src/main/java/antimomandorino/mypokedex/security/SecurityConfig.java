@@ -1,6 +1,5 @@
 package antimomandorino.mypokedex.security;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.Customizer;
@@ -11,15 +10,12 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
 @EnableMethodSecurity
 @EnableWebSecurity
 public class SecurityConfig {
 
-    @Autowired
-    private JWTFilter jwtFilter;
 
     @Bean
     SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
@@ -28,27 +24,29 @@ public class SecurityConfig {
         httpSecurity.formLogin(formLogin -> formLogin.disable());
         // 2. Disattivazione della protezione CSRF
         httpSecurity.csrf(csrf -> csrf.disable());
-        // 3. Disabilitazione delle sessioni
+        // 3. Disabilitazione delle sessioni: l'API è stateless, l'autenticazione sarà gestita da token.
         httpSecurity.sessionManagement(sessions -> sessions.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 
-        // Aggiunta del filtro
-        httpSecurity.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
 
-        //Definire gli endpoint pubblici/protetti
+        // Definire gli endpoint pubblici/protetti
         httpSecurity.authorizeHttpRequests(request -> request
+                // Permetto l'accesso a tutti gli endpoint sotto /auth (login, registrazione, ecc.)
                 .requestMatchers("/auth/**").permitAll()
+                // Richiedo l'autenticazione per tutti gli altri endpoint ("/**").
                 .requestMatchers("/**").authenticated()
         );
 
-        // Configurazione di default per il collegamento di con il FRONT_END
+        // Configurazione di default per il collegamento con il FRONT_END (per gestire le richieste CORS).
         httpSecurity.cors(Customizer.withDefaults());
 
+        // Restituisco la catena di filtri configurata.
         return httpSecurity.build();
     }
 
     // Bcrypt per la sicurezza delle password per gli utenti
     @Bean
     public PasswordEncoder getBcrypt() {
+        // Uso un'intensità di 12 (più sicuro del default, ma non eccessivamente lento).
         return new BCryptPasswordEncoder(12);
     }
 

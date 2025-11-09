@@ -14,6 +14,6 @@ public record UserRegistrationDTO(
         String email,
 
         @NotBlank(message = "Il campo password è obbligatorio")
-        @Size(min = 8, max = 10, message = "La password deve avere almeno 8 caratteri")
+        @Size(min = 8, message = "La password deve avere almeno 8 caratteri")
         String password) {
 }

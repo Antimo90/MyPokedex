@@ -26,22 +26,27 @@ public class JWTFilter extends OncePerRequestFilter {
     @Autowired
     private UserService userService;
 
-
+    //Logica principale del filtro: viene eseguita per ogni richiesta.
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
 
         //Verifica header
         String authHeader = request.getHeader("Authorization");
+        // Se l'header è mancante o non inizia con "Bearer ", lancio un errore di non autorizzazione.
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
             throw new UnauthorizedException("Insert the token in the authorization header in the correct format.");
         }
 
         //Estrazione e validazione del token
+        // Rimuovo il prefisso "Bearer " per isolare il token.
         String accessToken = authHeader.replace("Bearer ", "");
+        // Verifico che il token sia valido
         jwtTools.verifyToken(accessToken);
 
         //Ricerca dell'user nel DB
+        // 1. Estraggo l'ID utente dal token.
         Long idUser = jwtTools.exctractIdFromToken(accessToken);
+        // 2. Uso il servizio utente per recuperare i dati completi dell'utente dal database.
         User userFound = this.userService.findUserById(idUser);
 
         //Autorizzazione
@@ -57,7 +62,7 @@ public class JWTFilter extends OncePerRequestFilter {
     // Disattivazione dei filtri per gli endpoint pubblici
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
-        
+
         return new AntPathMatcher().match("/auth/**", request.getServletPath());
     }
 

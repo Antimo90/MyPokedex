@@ -9,8 +9,9 @@ import lombok.NoArgsConstructor;
 public class Stat {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_pokemon")
-    private int idPokemon;
+    private int idStat;
 
     private int hp;
     private int attack;
@@ -25,8 +26,7 @@ public class Stat {
     private int totalStats;
 
     @OneToOne(fetch = FetchType.LAZY)
-    @MapsId // serve per usare lo stesso id di pokemon
-    @JoinColumn(name = "id_pokemon")
+    @JoinColumn(name = "id_pokemon", referencedColumnName = "id_pokemon", nullable = false)
     private Pokemon pokemon;
 
     public Stat(int hp, int attack, int defense, int specialAttack, int specialDefense, int speed, int totalStats) {
@@ -39,8 +39,8 @@ public class Stat {
         this.totalStats = totalStats;
     }
 
-    public int getIdPokemon() {
-        return idPokemon;
+    public int getIdStat() {
+        return idStat;
     }
 
     public int getHp() {
@@ -99,11 +99,18 @@ public class Stat {
         this.totalStats = totalStats;
     }
 
+    public Pokemon getPokemon() {
+        return pokemon;
+    }
+
+    public void setPokemon(Pokemon pokemon) {
+        this.pokemon = pokemon;
+    }
 
     @Override
     public String toString() {
         return "Stat{" +
-                "idStat=" + idPokemon +
+                "idStat=" + idStat +
                 ", hp=" + hp +
                 ", attack=" + attack +
                 ", defense=" + defense +

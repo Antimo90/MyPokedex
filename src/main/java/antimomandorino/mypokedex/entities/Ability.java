@@ -17,7 +17,7 @@ public class Ability {
 
     private String name;
 
-    @Lob
+
     private String description;
 
     @ManyToMany(mappedBy = "abilities", fetch = FetchType.LAZY)
