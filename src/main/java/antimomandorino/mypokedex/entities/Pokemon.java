@@ -31,18 +31,18 @@ public class Pokemon {
     private String spriteShinyUrl;
 
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "id_type1")
     private Type type1;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "id_type2", nullable = true)
     private Type type2;
 
-    @OneToOne(mappedBy = "pokemon", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @OneToOne(mappedBy = "pokemon", cascade = CascadeType.ALL, orphanRemoval = true)
     private Stat stats;
 
-    @ManyToMany(fetch = FetchType.LAZY)
+    @ManyToMany
     @JoinTable(
             name = "pokemon_abilities",
             joinColumns = @JoinColumn(name = "id_pokemon"),
@@ -58,7 +58,7 @@ public class Pokemon {
     )
     private Set<Move> learnableMoves = new HashSet<>();
 
-    @OneToMany(mappedBy = "pokemon", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "pokemon", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<UserPokemon> userCollections;
 
     public Pokemon(int idPokemon, String name, int height, int weight, String description, String speciesCategory, String spriteUrl, String spriteShinyUrl, Type type1, Type type2, Set<Ability> abilities, Set<Move> learnableMoves) {

@@ -34,7 +34,7 @@ public class User implements UserDetails {
             inverseJoinColumns = @JoinColumn(name = "id_role"))
     private Set<Role> roles;
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<UserPokemon> collection;
 
     public User(String username, String email, String password, Set<Role> roles, Set<UserPokemon> collection) {

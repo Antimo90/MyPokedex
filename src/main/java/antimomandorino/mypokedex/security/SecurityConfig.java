@@ -28,14 +28,6 @@ public class SecurityConfig {
         httpSecurity.sessionManagement(sessions -> sessions.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 
 
-        // Definire gli endpoint pubblici/protetti
-        httpSecurity.authorizeHttpRequests(request -> request
-                // Permetto l'accesso a tutti gli endpoint sotto /auth (login, registrazione, ecc.)
-                .requestMatchers("/auth/**").permitAll()
-                // Richiedo l'autenticazione per tutti gli altri endpoint ("/**").
-                .requestMatchers("/**").authenticated()
-        );
-
         // Configurazione di default per il collegamento con il FRONT_END (per gestire le richieste CORS).
         httpSecurity.cors(Customizer.withDefaults());
 

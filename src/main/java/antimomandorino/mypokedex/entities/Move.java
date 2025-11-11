@@ -1,5 +1,6 @@
 package antimomandorino.mypokedex.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.NoArgsConstructor;
 
@@ -20,11 +21,12 @@ public class Move {
     private int power;
     private int accuracy;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "id_type")
     private Type type;
 
     @ManyToMany(mappedBy = "learnableMoves")
+    @JsonIgnore
     private Set<Pokemon> learnedByPokemon = new HashSet<>();
 
 

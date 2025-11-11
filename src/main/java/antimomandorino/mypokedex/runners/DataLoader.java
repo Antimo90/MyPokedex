@@ -28,6 +28,9 @@ public class DataLoader implements CommandLineRunner {
     @Autowired
     private PokemonRepository pokemonRepository;
 
+    @Autowired
+    private UserService userService;
+
     @Override
     public void run(String... args) throws Exception {
 
@@ -36,7 +39,7 @@ public class DataLoader implements CommandLineRunner {
         System.out.println("1. Popolamento Ruoli...");
         roleService.findOrCreateRole("USER");
         roleService.findOrCreateRole("ADMIN");
-
+        userService.seedAdminUser();
 
         System.out.println("2a. Popolamento Tipi...");
         typeService.importAllTypes();

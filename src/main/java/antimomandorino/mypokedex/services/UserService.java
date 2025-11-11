@@ -147,4 +147,41 @@ public class UserService {
         // Salvo l'utente con la nuova password.
         userRepository.save(userFound);
     }
+
+    // Metodo per creare l'Admin
+    public void seedAdminUser() {
+        String adminUsername = "admin_kanto";
+
+        if (userRepository.findByUsername(adminUsername).isEmpty()) {
+
+            // La password deve essere cifrata!
+            String encodedPassword = bcrypt.encode("pokedex123");
+
+            Role adminRole = this.roleService.findByNameRole("ADMIN");
+
+            User admin = new User();
+
+            admin.setUsername(adminUsername);
+            admin.setEmail("admin@kanto.com");
+            admin.setPassword(encodedPassword);
+            admin.setRoles(Set.of(adminRole));
+
+            userRepository.save(admin);
+            System.out.println("--- Utente Admin creato: " + adminUsername + " ---");
+        }
+    }
+
+    //metoto per trovare la mail
+    public User findUserByEmail(String email) {
+        return this.userRepository.findByEmail(email).orElseThrow(
+                () -> new NotFoundException("User with email " + email + " has not been found.")
+        );
+    }
+
+    //metodo per trovare tramite username
+    public User findUserByUsername(String username) {
+        return this.userRepository.findByUsername(username).orElseThrow(
+                () -> new NotFoundException("User with username " + username + " has not been found.")
+        );
+    }
 }

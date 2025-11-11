@@ -1,5 +1,6 @@
 package antimomandorino.mypokedex.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.NoArgsConstructor;
 
@@ -25,8 +26,9 @@ public class Stat {
     @Column(name = "total_stats")
     private int totalStats;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne
     @JoinColumn(name = "id_pokemon", referencedColumnName = "id_pokemon", nullable = false)
+    @JsonIgnore
     private Pokemon pokemon;
 
     public Stat(int hp, int attack, int defense, int specialAttack, int specialDefense, int speed, int totalStats) {

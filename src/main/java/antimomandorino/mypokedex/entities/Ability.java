@@ -1,5 +1,6 @@
 package antimomandorino.mypokedex.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.NoArgsConstructor;
 
@@ -20,7 +21,8 @@ public class Ability {
 
     private String description;
 
-    @ManyToMany(mappedBy = "abilities", fetch = FetchType.LAZY)
+    @ManyToMany(mappedBy = "abilities")
+    @JsonIgnore
     private Set<Pokemon> pokemons;
 
     public Ability(String name, String description) {

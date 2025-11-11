@@ -9,6 +9,8 @@ import antimomandorino.mypokedex.payloads.StatDTO;
 import antimomandorino.mypokedex.pokeAPIPayloads.PokemonApiDetailDTO;
 import antimomandorino.mypokedex.pokeAPIPayloads.PokemonSpeciesApiDTO;
 import antimomandorino.mypokedex.repositories.PokemonRepository;
+import com.cloudinary.Cloudinary;
+import com.cloudinary.utils.ObjectUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -16,8 +18,11 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -41,6 +46,8 @@ public class PokemonService {
     private StatService statService;
     @Autowired
     private MoveService moveService;
+    @Autowired
+    private Cloudinary imageCloudinary;
 
     //Trova un Pokémon tramite il suo ID.
     public Pokemon findPokemonById(int idPokemon) {
@@ -195,5 +202,31 @@ public class PokemonService {
             }
         }
         System.out.println("--- Importazione Kanto Completata ---");
+    }
+
+    //metodo per modificare gli sprite
+    public Pokemon updateSpriteUrls(int idPokemon, MultipartFile spriteFile, MultipartFile spriteShinyFile) {
+        Pokemon found = this.findPokemonById(idPokemon);
+        try {
+            if (spriteFile != null && !spriteFile.isEmpty()) {
+                Map result = imageCloudinary.uploader().upload(spriteFile.getBytes(), ObjectUtils.emptyMap());
+                String imageUrl = (String) result.get("url");
+                found.setSpriteUrl(imageUrl);
+            }
+            if (spriteShinyFile != null && !spriteShinyFile.isEmpty()) {
+                Map resultShiny = imageCloudinary.uploader().upload(spriteShinyFile.getBytes(), ObjectUtils.emptyMap());
+                String imageShinyUrl = (String) resultShiny.get("url");
+                found.setSpriteShinyUrl(imageShinyUrl);
+            }
+
+
+            return pokemonRepository.save(found);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        } catch (Exception e) {
+            // Cattura altre eccezioni di Cloudinary
+            throw new RuntimeException("Errore di Cloudinary durante l'upload: " + e.getMessage());
+        }
+
     }
 }
