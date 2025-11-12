@@ -169,8 +169,8 @@ public class PokemonService {
                         detail.weight(),
                         description,
                         speciesCategory,
-                        null, //TODO : Lascio null da popolare dopo, come da nota.
-                        null, // TODO :Lascio null per lo Sprite Shiny.
+                        null,
+                        null,
                         type1,
                         type2,
                         abilities,

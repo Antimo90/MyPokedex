@@ -28,6 +28,8 @@ public class User implements UserDetails {
     @Column(nullable = false)
     private String password;
 
+    private String avatarUrl;
+
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "user_roles",
             joinColumns = @JoinColumn(name = "id_user"),
@@ -37,12 +39,13 @@ public class User implements UserDetails {
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<UserPokemon> collection;
 
-    public User(String username, String email, String password, Set<Role> roles, Set<UserPokemon> collection) {
+    public User(String username, String email, String password, Set<Role> roles, Set<UserPokemon> collection, String avatarUrl) {
         this.username = username;
         this.email = email;
         this.password = password;
         this.roles = roles;
         this.collection = collection;
+        this.avatarUrl = avatarUrl;
     }
 
     public Long getIdUser() {
@@ -117,6 +120,14 @@ public class User implements UserDetails {
         this.collection = collection;
     }
 
+    public String getAvatarUrl() {
+        return avatarUrl;
+    }
+
+    public void setAvatarUrl(String avatarUrl) {
+        this.avatarUrl = avatarUrl;
+    }
+
     @Override
     public String toString() {
         return "User{" +
@@ -124,6 +135,9 @@ public class User implements UserDetails {
                 ", username='" + username + '\'' +
                 ", email='" + email + '\'' +
                 ", password='" + password + '\'' +
+                ", avatarUrl='" + avatarUrl + '\'' +
+                ", roles=" + roles +
+                ", collection=" + collection +
                 '}';
     }
 }

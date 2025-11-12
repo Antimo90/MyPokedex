@@ -1,5 +1,6 @@
 package antimomandorino.mypokedex.services;
 
+import antimomandorino.mypokedex.entities.Pokemon;
 import antimomandorino.mypokedex.entities.Role;
 import antimomandorino.mypokedex.entities.User;
 import antimomandorino.mypokedex.entities.UserPokemon;
@@ -32,6 +33,9 @@ public class UserService {
 
     @Autowired
     private RoleService roleService;
+
+    @Autowired
+    private PokemonService pokemonService;
 
     // Trova un utente tramite il suo ID.
     public User findUserById(Long idUser) {
@@ -70,13 +74,17 @@ public class UserService {
         // Inizializzo una collezione vuota per i Pokémon dell'utente.
         Set<UserPokemon> emptyCollection = new HashSet<>();
 
+        // inserisco immagine di default di pika
+        Pokemon pikachu = pokemonService.findPokemonById(25);
+        String defaultAvatar = pikachu.getSpriteUrl();
         // Creo la nuova istanza di User.
         User newUser = new User(
                 payload.username(),
                 payload.email(),
                 bcrypt.encode(payload.password()),
                 defaultRoles,
-                emptyCollection
+                emptyCollection,
+                defaultAvatar
         );
 
 
@@ -183,5 +191,25 @@ public class UserService {
         return this.userRepository.findByUsername(username).orElseThrow(
                 () -> new NotFoundException("User with username " + username + " has not been found.")
         );
+    }
+
+    // Metodo: Aggiorna l'avatar di un utente
+    public User updateAvatar(Long userId, int pokemonId, boolean isShiny) {
+        User userFound = this.findUserById(userId);
+
+        // 1. Trova il Pokémon e ottieni l'URL dello sprite.
+        Pokemon pokemon = pokemonService.findPokemonById(pokemonId);
+
+        String newAvatarUrl = isShiny ? pokemon.getSpriteShinyUrl() : pokemon.getSpriteUrl();
+
+        if (newAvatarUrl == null || newAvatarUrl.isEmpty()) {
+            // Gestione se lo sprite Shiny è richiesto ma non esiste
+            throw new BadRequestException("The requested Pokémon sprite (Shiny: " + isShiny + ") is not available.");
+        }
+
+        // 2. Aggiorna l'URL dell'avatar.
+        userFound.setAvatarUrl(newAvatarUrl);
+
+        return this.userRepository.save(userFound);
     }
 }
