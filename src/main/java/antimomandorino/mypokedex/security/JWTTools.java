@@ -23,7 +23,7 @@ public class JWTTools {
                 // Imposto la data di emissione (quando è stato creato).
                 .issuedAt(new Date(System.currentTimeMillis()))
                 // Imposto la data di scadenza (7 giorni da adesso).
-                .expiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 24 * 7))
+                .expiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 24 * 30))
                 // Imposto il "soggetto" del token: l'ID dell'utente (usato per identificare chi è autenticato).
                 .subject(String.valueOf(user.getIdUser()))
                 // Firmo il token usando l'algoritmo HMAC e la chiave segreta.
