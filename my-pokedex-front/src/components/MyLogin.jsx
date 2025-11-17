@@ -8,13 +8,16 @@ import {
   Col,
   Alert,
 } from "react-bootstrap";
-import sfondo2 from "../assets/sfondoLogin.jpg"; // Riutilizziamo lo sfondo
+import { useNavigate } from "react-router-dom";
+import sfondo2 from "../assets/sfondoLogin2.jpg";
 
 const LOGIN_API_ENDPOINT = "http://localhost:3001/auths/login";
 
 const MyLogin = () => {
+  const navigate = useNavigate();
+
   const [formData, setFormData] = useState({
-    email: "",
+    username: "",
     password: "",
   });
 
@@ -41,10 +44,10 @@ const MyLogin = () => {
 
   const validate = () => {
     let newErrors = {};
-    const { email, password } = formData;
+    const { username, password } = formData;
 
-    if (!email || !/\S+@\S+\.\S+/.test(email)) {
-      newErrors.email = "Inserisci un indirizzo email valido.";
+    if (!username || username.length < 3) {
+      newErrors.username = "Inserisci un username valido (almeno 3 caratteri).";
     }
 
     if (!password) {
@@ -91,7 +94,7 @@ const MyLogin = () => {
 
         if (data.token) {
           localStorage.setItem("authToken", data.token);
-          setLoginSuccess(true);
+          navigate("/pokedex");
         } else {
           setServerError("Login riuscito, ma nessun token ricevuto.");
         }
@@ -100,7 +103,7 @@ const MyLogin = () => {
         console.error("Errore di fetch o server:", error);
 
         if (error.status === 401) {
-          setServerError("Email o password non corretti.");
+          setServerError("Username o password non corretti.");
         } else if (error.status) {
           setServerError(
             `Errore del server (${error.status}). Riprova più tardi.`
@@ -158,27 +161,30 @@ const MyLogin = () => {
                   <Form onSubmit={handleSubmit}>
                     <Form.Group
                       className="mb-3 text-white bold"
-                      controlId="email"
+                      controlId="username"
                     >
-                      <Form.Label>Indirizzo Email</Form.Label>
+                      <Form.Label>Nome Utente</Form.Label>
                       <Form.Control
-                        type="email"
-                        placeholder="Inserisci l'email"
+                        type="text"
+                        placeholder="Inserisci il tuo nome utente"
                         onChange={handleChange}
-                        value={formData.email}
-                        isInvalid={!!errors.email}
+                        value={formData.username}
+                        isInvalid={!!errors.username}
                         style={{
                           backgroundColor: "rgba(255, 255, 255, 0.6)",
-
+                          color: "black",
                           border: "1px solid rgba(255, 255, 255, 0.3)",
                         }}
                       />
                       <Form.Control.Feedback type="invalid">
-                        {errors.email}
+                        {errors.username}
                       </Form.Control.Feedback>
                     </Form.Group>
 
-                    <Form.Group className="mb-4" controlId="password">
+                    <Form.Group
+                      className="mb-4 text-white bold"
+                      controlId="password"
+                    >
                       <Form.Label>Password</Form.Label>
                       <Form.Control
                         type="password"
@@ -186,6 +192,11 @@ const MyLogin = () => {
                         onChange={handleChange}
                         value={formData.password}
                         isInvalid={!!errors.password}
+                        style={{
+                          backgroundColor: "rgba(255, 255, 255, 0.6)",
+                          color: "black",
+                          border: "1px solid rgba(255, 255, 255, 0.3)",
+                        }}
                       />
                       <Form.Control.Feedback type="invalid">
                         {errors.password}
@@ -212,7 +223,7 @@ const MyLogin = () => {
                       )}
                     </Button>
 
-                    <p className="mt-3 text-center small">
+                    <p className="mt-3 text-center text-white small">
                       Non hai un account?{" "}
                       <a
                         href="/register"
