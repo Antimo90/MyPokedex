@@ -8,3 +8,13 @@
 .custom-card-opacity p {
   color: #212529 !important;
 }
+.button-down {
+  margin-top: 150px;
+}
+
+.cardBodyStyle {
+  height: "60px";
+  display: "flex";
+  align-items: "center";
+  justify-content: "center";
+}

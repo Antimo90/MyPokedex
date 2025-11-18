@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 @RestController
-@RequestMapping("/pokemons")
+@RequestMapping("/pokemon")
 public class PokemonController {
 
     @Autowired

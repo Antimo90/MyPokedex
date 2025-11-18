@@ -48,6 +48,7 @@ public class JWTFilter extends OncePerRequestFilter {
         Long idUser = jwtTools.exctractIdFromToken(accessToken);
         // 2. Uso il servizio utente per recuperare i dati completi dell'utente dal database.
         User userFound = this.userService.findUserById(idUser);
+       
 
         //Autorizzazione
         Authentication authentication = new UsernamePasswordAuthenticationToken(userFound, null, userFound.getAuthorities());
