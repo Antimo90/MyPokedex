@@ -24,7 +24,7 @@ const MyLogin = () => {
   const [errors, setErrors] = useState({});
   const [isLoading, setIsLoading] = useState(false);
   const [serverError, setServerError] = useState(null);
-  const [loginSuccess, setLoginSuccess] = useState(false); // Stato per feedback
+  const [loginSuccess, setLoginSuccess] = useState(false);
 
   const handleChange = (e) => {
     const { id, value } = e.target;
