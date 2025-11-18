@@ -25,9 +25,9 @@ public class MoveController {
     }
 
 
-    @GetMapping
+    @GetMapping("/{moveIdentifier}")
     @PreAuthorize("hasAnyAuthority('ADMIN', 'USER')")
-    public Move getSingleMove(@PathVariable String name) {
+    public Move getSingleMove(@PathVariable("moveIdentifier") String name) {
         return this.moveService.findByName(name);
     }
 }
