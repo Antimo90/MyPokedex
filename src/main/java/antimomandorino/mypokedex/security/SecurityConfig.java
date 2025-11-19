@@ -2,6 +2,7 @@ package antimomandorino.mypokedex.security;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -31,7 +32,7 @@ public class SecurityConfig {
         httpSecurity.csrf(csrf -> csrf.disable());
         // 3. Disabilitazione delle sessioni: l'API è stateless, l'autenticazione sarà gestita da token.
         httpSecurity.sessionManagement(sessions -> sessions.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
-        httpSecurity.authorizeHttpRequests(req -> req.requestMatchers("/auths/**").permitAll().anyRequest().authenticated());
+        httpSecurity.authorizeHttpRequests(req -> req.requestMatchers("/auths/**").permitAll().requestMatchers(HttpMethod.GET, "/pokemon").permitAll().anyRequest().authenticated());
 
 
         // Configurazione di default per il collegamento con il FRONT_END (per gestire le richieste CORS).

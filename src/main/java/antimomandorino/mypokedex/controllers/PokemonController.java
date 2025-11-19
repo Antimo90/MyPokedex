@@ -41,7 +41,6 @@ public class PokemonController {
     }
 
     @GetMapping
-    @PreAuthorize("hasAnyAuthority('ADMIN', 'USER')")
     public Page<Pokemon> getAllPokemon(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size,

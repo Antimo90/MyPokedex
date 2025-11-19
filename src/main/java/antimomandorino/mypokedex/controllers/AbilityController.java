@@ -27,7 +27,7 @@ public class AbilityController {
 
     @GetMapping("/{idAbility}")
     @PreAuthorize("hasAnyAuthority('ADMIN', 'USER')")
-    public Ability getSingleAbility(@PathVariable String name) {
+    public Ability getSingleAbility(@PathVariable("idAbility") String name) {
         return this.abilityService.findByName(name);
     }
 }
