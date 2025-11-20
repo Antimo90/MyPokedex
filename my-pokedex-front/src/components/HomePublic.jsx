@@ -1,6 +1,7 @@
 import { Container, Button, Row, Col, Card } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import ShowcaseSection from "./ShowcaseSection";
+import pokeball from "../assets/pokeball.png";
 
 const HomePublic = () => {
   const navigate = useNavigate();
@@ -17,7 +18,9 @@ const HomePublic = () => {
         <Row
           className="justify-content-center pt-5 pb-5 mb-5"
           style={{
-            backgroundColor: "#cc0000",
+            backgroundImage: `url(${pokeball})`,
+            backgroundPosition: "center",
+            backgroundSize: "cover",
             borderRadius: "10px",
             color: "white",
           }}

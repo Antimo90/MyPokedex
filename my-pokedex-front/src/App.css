@@ -8,6 +8,7 @@
 .custom-card-opacity p {
   color: #212529 !important;
 }
+
 .button-down {
   margin-top: 150px;
 }
@@ -17,4 +18,113 @@
   display: "flex";
   align-items: "center";
   justify-content: "center";
+}
+
+.pokemon-card-custom-final {
+  background-color: #1a2234;
+  border: 1px solid #4a5568;
+  border-radius: 15px;
+  overflow: hidden;
+  transition: transform 0.2s;
+}
+
+.pokemon-card-custom-final:hover {
+  transform: translateY(-5px);
+}
+
+.pokemon-card-image-container-final {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #1a2234;
+  min-height: 150px;
+  padding: 1rem;
+}
+
+.pokemon-card-image-circle {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 120px;
+  height: 120px;
+  background-color: rgba(255, 255, 255, 0.05);
+  border-radius: 50%;
+  z-index: 1;
+}
+
+.pokemon-card-custom-final .card-img-top {
+  position: relative;
+  z-index: 2;
+  max-height: 120px;
+  width: auto;
+  object-fit: contain;
+}
+
+.card-body-final {
+  color: #e2e8f0;
+  background-color: #1a2234;
+  padding-bottom: 1rem !important;
+}
+
+.card-body-final .card-title {
+  color: #ffffff;
+  font-weight: 700;
+  font-size: 1.4rem;
+  margin-top: 0;
+}
+
+.pokemon-card-id-number-final {
+  color: #a0aec0;
+  font-size: 1.1rem;
+  font-weight: 500;
+  margin-bottom: 0.3rem;
+  width: 100%;
+  text-align: center;
+}
+
+.type-badge-final {
+  border-radius: 1rem;
+  padding: 0.3em 0.9em;
+  font-size: 0.9em;
+  font-weight: 600;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.pokedex-title-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 2rem;
+}
+
+.pokedex-title-shape {
+  position: relative;
+  padding: 1rem 3rem;
+  background-color: #a0ffff;
+  color: #1a1a1a;
+  font-size: 2.5rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  clip-path: polygon(5% 0, 95% 0, 100% 50%, 95% 100%, 5% 100%, 0 50%);
+  box-shadow: 0 0 10px #00ffff, 0 0 20px #00ffff, 0 0 30px #00ffff;
+}
+
+.pokedex-title-shape::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  border: 3px solid #00ffff;
+  clip-path: polygon(5% 0, 95% 0, 100% 50%, 95% 100%, 5% 100%, 0 50%);
+  z-index: -1;
+}
+
+.pokedex-title-text {
+  margin: 0;
+  padding: 0;
+  color: #1a1a1a;
 }

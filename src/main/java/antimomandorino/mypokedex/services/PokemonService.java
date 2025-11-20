@@ -59,7 +59,7 @@ public class PokemonService {
     //Restituisce una pagina di tutti i Pokémon, con paginazione e ordinamento.
     public Page<Pokemon> findAllPokemon(int pageNumber, int pageSize, String sortBy) {
         // Limite sulla dimensione della pagina.
-        if (pageSize > 50) pageSize = 50;
+        
         // Creo l'oggetto Pageable.
         Pageable pageable = PageRequest.of(pageNumber, pageSize, Sort.by(sortBy).ascending());
         // Restituisco la pagina.

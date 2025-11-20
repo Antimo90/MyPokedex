@@ -41,6 +41,7 @@ const Pokedex = () => {
       })
       .then((data) => {
         setPokemonList(data.content || data);
+        console.log("JSON ricevuto dal Backend:", data);
       })
       .catch((err) => {
         console.error("Errore nel caricamento dei Pokémon:", err);
@@ -57,44 +58,48 @@ const Pokedex = () => {
   }, []);
 
   return (
-    <Container className="py-5" style={{ minHeight: "80vh" }}>
-      <h1 className="text-center mb-4 text-primary">
-        Il Pokédex di Kanto (151 Pokémon)
-      </h1>
-      <hr />
-
-      {isLoading && (
-        <div className="text-center mt-5">
-          <Spinner
-            animation="border"
-            variant="danger"
-            role="status"
-            className="me-2"
-          />
-          <p className="lead text-secondary">Caricamento Pokémon...</p>
+    <div style={{ background: "#1a2234" }}>
+      <Container className="py-5" style={{ minHeight: "80vh" }}>
+        <div className="pokedex-title-container">
+          <div className="pokedex-title-shape">
+            <h1 className="pokedex-title-text">Pokédex</h1>
+          </div>
         </div>
-      )}
+        <hr />
 
-      {error && (
-        <Alert variant="danger" className="mt-4 text-center">
-          {error}
-        </Alert>
-      )}
+        {isLoading && (
+          <div className="text-center mt-5">
+            <Spinner
+              animation="border"
+              variant="danger"
+              role="status"
+              className="me-2"
+            />
+            <p className="lead text-secondary">Caricamento Pokémon...</p>
+          </div>
+        )}
 
-      {!isLoading && !error && pokemonList.length === 0 && (
-        <Alert variant="info" className="mt-4 text-center">
-          Nessun Pokémon trovato nel database.
-        </Alert>
-      )}
+        {error && (
+          <Alert variant="danger" className="mt-4 text-center">
+            {error}
+          </Alert>
+        )}
 
-      <Row xs={2} sm={3} md={4} lg={5} xl={6} className="g-4 mt-3">
-        {pokemonList.map((pokemon) => (
-          <Col key={pokemon.idPokemon}>
-            <PokemonCard pokemon={pokemon} />
-          </Col>
-        ))}
-      </Row>
-    </Container>
+        {!isLoading && !error && pokemonList.length === 0 && (
+          <Alert variant="info" className="mt-4 text-center">
+            Nessun Pokémon trovato nel database.
+          </Alert>
+        )}
+
+        <Row xs={2} sm={3} md={4} lg={5} xl={6} className="g-4 mt-3">
+          {pokemonList.map((pokemon) => (
+            <Col key={pokemon.idPokemon}>
+              <PokemonCard pokemon={pokemon} />
+            </Col>
+          ))}
+        </Row>
+      </Container>
+    </div>
   );
 };
 
