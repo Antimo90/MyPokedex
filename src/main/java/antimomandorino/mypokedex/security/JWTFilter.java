@@ -48,8 +48,7 @@ public class JWTFilter extends OncePerRequestFilter {
         Long idUser = jwtTools.exctractIdFromToken(accessToken);
         // 2. Uso il servizio utente per recuperare i dati completi dell'utente dal database.
         User userFound = this.userService.findUserById(idUser);
-
-
+        
         //Autorizzazione
         Authentication authentication = new UsernamePasswordAuthenticationToken(userFound, null, userFound.getAuthorities());
 
@@ -69,6 +68,6 @@ public class JWTFilter extends OncePerRequestFilter {
 
         // Includi tutti i percorsi che devono essere pubblici
         return pathMatcher.match("/auths/**", path) ||
-                (pathMatcher.match("/pokemon", path) && request.getMethod().equals("GET")); // Permetti GET /pokemon
+                (pathMatcher.match("/pokemon", path) && request.getMethod().equals("GET"));
     }
 }

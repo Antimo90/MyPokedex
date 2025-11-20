@@ -93,7 +93,7 @@ const MyLogin = () => {
         console.log("Login riuscito:", data);
 
         if (data.token) {
-          localStorage.setItem("authToken", data.token);
+          localStorage.setItem("token", data.token);
           navigate("/pokedex");
         } else {
           setServerError("Login riuscito, ma nessun token ricevuto.");

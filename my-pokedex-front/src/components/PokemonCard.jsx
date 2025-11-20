@@ -47,11 +47,12 @@ const PokemonCard = ({ pokemon }) => {
 
           <div className="d-flex justify-content-center flex-wrap gap-1">
             {types.length > 0 &&
-              types.map((type) => {
+              types.map((type, index) => {
                 const finalColor = type.colorHex;
 
                 return (
                   <span
+                    key={index}
                     className="badge d-inline-block text-capitalize px-2 py-1 rounded-pill"
                     style={{
                       backgroundColor: `${finalColor}`,

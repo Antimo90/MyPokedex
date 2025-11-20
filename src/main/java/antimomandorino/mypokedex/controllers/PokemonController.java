@@ -35,7 +35,7 @@ public class PokemonController {
     }
 
     @GetMapping("/{idPokemon}")
-    @PreAuthorize("hasAnyAuthority('ADMIN','USER')")
+    // @PreAuthorize("hasAnyAuthority('ADMIN','USER')")
     public Pokemon getSinglePokemon(@PathVariable int idPokemon) {
         return this.pokemonService.findPokemonById(idPokemon);
     }

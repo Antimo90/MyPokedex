@@ -7,11 +7,14 @@ import MyRegister from "./components/MyRegister.jsx";
 import MyLogin from "./components/MyLogin.jsx";
 import HomePublic from "./components/HomePublic.jsx";
 import Pokedex from "./components/Pokedex.jsx";
+import PokemonDetails from "./components/PokemonDetails.jsx";
+import ScrollToTop from "./components/ScrollToTop";
 
 function App() {
   return (
     <>
       <BrowserRouter>
+        <ScrollToTop />
         <MyNavbar />
         <Routes>
           <Route path="/" element={<HomePublic />} />
@@ -19,6 +22,7 @@ function App() {
           <Route path="/login" element={<MyLogin />} />
           <Route path="/pokedex-pubblico" element={<Pokedex />} />
           <Route path="/pokedex" element={<Pokedex />} />
+          <Route path="/pokemon/:idPokemon" element={<PokemonDetails />} />
         </Routes>
 
         <MyFooter />
