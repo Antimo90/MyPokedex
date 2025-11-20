@@ -62,7 +62,7 @@ const Pokedex = () => {
       <Container className="py-5" style={{ minHeight: "80vh" }}>
         <div className="pokedex-title-container">
           <div className="pokedex-title-shape">
-            <h1 className="pokedex-title-text">Pokédex</h1>
+            <h1 className="pokedex-title-text">Pokedex</h1>
           </div>
         </div>
         <hr />

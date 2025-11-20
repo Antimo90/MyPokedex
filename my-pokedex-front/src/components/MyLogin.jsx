@@ -204,7 +204,7 @@ const MyLogin = () => {
                     </Form.Group>
 
                     <Button
-                      variant="primary"
+                      variant="warning"
                       type="submit"
                       className="w-100 p-2"
                       disabled={isLoading}
