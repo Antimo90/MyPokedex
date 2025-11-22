@@ -9,6 +9,7 @@ import HomePublic from "./components/HomePublic.jsx";
 import Pokedex from "./components/Pokedex.jsx";
 import PokemonDetails from "./components/PokemonDetails.jsx";
 import ScrollToTop from "./components/ScrollToTop";
+import PokedexUser from "./components/PokedexUser.jsx";
 
 function App() {
   return (
@@ -20,7 +21,7 @@ function App() {
           <Route path="/" element={<HomePublic />} />
           <Route path="/register" element={<MyRegister />} />
           <Route path="/login" element={<MyLogin />} />
-          <Route path="/pokedex-pubblico" element={<Pokedex />} />
+          <Route path="/pokedex-pubblico" element={<PokedexUser />} />
           <Route path="/pokedex" element={<Pokedex />} />
           <Route path="/pokemon/:idPokemon" element={<PokemonDetails />} />
         </Routes>

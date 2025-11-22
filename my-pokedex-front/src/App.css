@@ -117,7 +117,6 @@
   border-bottom: 2px solid #a0ffff;
 }
 
-/* Modifica il testo in nero */
 .pokedex-title-text {
   margin: 0;
   color: #1a1a1a;
@@ -126,4 +125,16 @@
   padding: 0;
   color: inherit;
   text-align: center;
+}
+
+.card-semitrasparente {
+  background-color: rgba(255, 255, 255, 0.7) !important;
+  border-color: rgba(255, 255, 255);
+}
+
+.col-descrizione {
+  /* Imposta una larghezza massima per la colonna */
+  max-width: 300px;
+  /* (Opzionale) Forza il testo ad andare a capo in modo più aggressivo */
+  word-wrap: break-word;
 }

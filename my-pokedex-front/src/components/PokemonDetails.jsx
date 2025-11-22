@@ -124,137 +124,176 @@ const PokemonDetails = () => {
   ];
 
   return (
-    <Container className="py-5" style={{ minHeight: "80vh" }}>
-      <Row className="mb-4">
-        <Col>
-          <h1 className="text-capitalize display-4 border-bottom pb-2">
-            {pokemonData.name}
-            <span className="text-muted fs-3 ms-2">
-              #{formatId(pokemonData.idPokemon)}
-            </span>
-          </h1>
-        </Col>
-      </Row>
+    <div style={{ background: "#1a2234" }}>
+      <Container className="py-5" style={{ minHeight: "80vh" }}>
+        <div className="pokedex-title-container">
+          <div className="pokedex-title-shape">
+            <h1 className="pokedex-title-text ">Pokedex</h1>
+          </div>
+        </div>
+        <Row className="mb-4">
+          <Col className="text-center">
+            <h1 className="text-capitalize display-4 pb-2 text-white mt-4">
+              {pokemonData.name}
+              <span className=" fs-3 ms-2 text-white">
+                #{formatId(pokemonData.idPokemon)}
+              </span>
+            </h1>
+          </Col>
+        </Row>
 
-      <Row>
-        <Col md={5} className="mb-4">
-          <Card className="shadow-lg h-100">
-            <div className="p-4 text-center">
-              <img
-                src={
-                  isShiny ? pokemonData.spriteShinyUrl : pokemonData.spriteUrl
-                }
-                alt={pokemonData.name}
-                style={{ maxWidth: "250px", cursor: "pointer" }}
-                onClick={() => setIsShiny(!isShiny)}
-              />
-              <p className="mt-2 text-muted fst-italic">
-                Clicca sull'immagine per lo sprite{" "}
-                {isShiny ? "Normale" : "Shiny"}
-              </p>
-            </div>
+        <Row>
+          <Col md={5} className="mb-4">
+            <Card className="shadow-lg h-100 card-semitrasparente">
+              <div className="p-4 text-center">
+                <img
+                  src={
+                    isShiny ? pokemonData.spriteShinyUrl : pokemonData.spriteUrl
+                  }
+                  alt={pokemonData.name}
+                  style={{ maxWidth: "250px", cursor: "pointer" }}
+                  onClick={() => setIsShiny(!isShiny)}
+                />
+                <p className="mt-2 text-muted fst-italic">
+                  Clicca sull'immagine per lo sprite{" "}
+                  {isShiny ? "Normale" : "Shiny"}
+                </p>
+              </div>
 
-            <Card.Body className="border-top">
-              <p>
-                <strong className="me-2">Categoria:</strong>
-                {pokemonData.speciesCategory}
-              </p>
-              <p>
-                <strong className="me-2">Altezza:</strong>
-                {formatHeight(pokemonData.height)}
-              </p>
-              <div className="mb-3">
-                <strong className="me-2">Tipi:</strong>
-                {types.map((type) => (
-                  <Badge
-                    key={type.name}
-                    className="text-capitalize me-1"
-                    style={{ backgroundColor: type.colorHex, color: "#FFF" }}
+              <Card.Body className="border-top">
+                <p>
+                  <strong className="me-2">Categoria:</strong>
+                  {pokemonData.speciesCategory}
+                </p>
+                <p>
+                  <strong className="me-2">Altezza:</strong>
+                  {formatHeight(pokemonData.height)}
+                </p>
+                <div className="mb-3">
+                  <strong className="me-2">Tipi:</strong>
+                  {types.map((type) => (
+                    <span
+                      key={type.name}
+                      className="text-capitalize me-1 badge d-inline-block text-capitalize px-2 py-1 rounded-pill"
+                      style={{ backgroundColor: type.colorHex, color: "#FFF" }}
+                    >
+                      {type.name}
+                    </span>
+                  ))}
+                </div>
+                <Card.Text>
+                  <strong className="d-block mb-1">Descrizione:</strong>
+                  {formatDescription(pokemonData.description)}
+                </Card.Text>
+              </Card.Body>
+            </Card>
+          </Col>
+
+          <Col md={7} className="mb-4">
+            <Card className="shadow-lg h-100 card-semitrasparente">
+              <Card.Header className="fs-5 fw-bold">
+                Statistiche Base
+              </Card.Header>
+              <ListGroup variant="flush">
+                {statsArray.map((stat, index) => (
+                  <ListGroup.Item
+                    key={index}
+                    className="d-flex align-items-center"
                   >
-                    {type.name}
-                  </Badge>
+                    <span
+                      className="fw-bold text-end"
+                      style={{ width: "100px" }}
+                    >
+                      {stat.name}:
+                    </span>
+                    <span className="ms-3 me-2" style={{ width: "30px" }}>
+                      {stat.value}
+                    </span>
+                    <ProgressBar
+                      variant={stat.variant}
+                      now={(stat.value / MAX_BASE_STAT) * 100}
+                      className="flex-grow-1 "
+                      label={`${stat.value}`}
+                    />
+                  </ListGroup.Item>
+                ))}
+                <ListGroup.Item className="text-end fw-bold">
+                  Totale Statistiche: {pokemonData.stats.totalStats}
+                </ListGroup.Item>
+              </ListGroup>
+
+              <Card.Header className="fs-5 fw-bold mt-3">Abilità</Card.Header>
+              <ListGroup variant="flush">
+                {pokemonData.abilities.map((ability) => (
+                  <ListGroup.Item key={ability.idAbility}>
+                    <strong className="text-capitalize">{ability.name}:</strong>
+                    <span className="ms-2">{ability.description}</span>
+                  </ListGroup.Item>
+                ))}
+              </ListGroup>
+            </Card>
+          </Col>
+        </Row>
+
+        <Row className="mt-4">
+          <Col>
+            <Card className="shadow-lg card-semitrasparente">
+              <Card.Header className="fs-5 fw-bold ">
+                Mosse Apprendibili ({pokemonData.learnableMoves.length})
+              </Card.Header>
+
+              <div className="p-3">
+                <Row className="fw-bold text-white bg-dark d-none d-md-flex py-2 rounded">
+                  <Col md={3}>Nome Mossa</Col>
+                  <Col md={1} className="text-center">
+                    Potenza
+                  </Col>
+                  <Col md={2} className="text-center">
+                    Precisione
+                  </Col>
+                  <Col md={6}>Descrizione</Col>
+                </Row>
+
+                {pokemonData.learnableMoves.map((move, index) => (
+                  <Row
+                    key={move.idMove}
+                    className={`py-2 border-bottom align-items-center ${
+                      index % 2 === 1 ? "bg-light bg-opacity-10" : ""
+                    }`}
+                  >
+                    <Col
+                      xs={12}
+                      md={3}
+                      className="fw-bold text-capitalize mb-1 mb-md-0"
+                    >
+                      <span className="d-md-none me-2 text-muted">Mossa:</span>
+                      {move.name}
+                    </Col>
+
+                    <Col xs={6} md={1} className="text-md-center">
+                      <span className="d-md-none me-2 fw-bold">Potenza:</span>
+                      {move.power || "—"}
+                    </Col>
+                    <Col xs={6} md={2} className="text-md-center">
+                      <span className="d-md-none me-2 fw-bold">
+                        Precisione:
+                      </span>
+                      {move.accuracy || "—"}
+                    </Col>
+                    <Col xs={12} md={6} className="mt-2 mt-md-0">
+                      <span className="d-md-none me-2 fw-bold d-block">
+                        Descrizione:
+                      </span>
+                      {move.description}
+                    </Col>
+                  </Row>
                 ))}
               </div>
-              <Card.Text>
-                <strong className="d-block mb-1">Descrizione:</strong>
-                {formatDescription(pokemonData.description)}
-              </Card.Text>
-            </Card.Body>
-          </Card>
-        </Col>
-
-        <Col md={7} className="mb-4">
-          <Card className="shadow-lg h-100">
-            <Card.Header className="fs-5 fw-bold">Statistiche Base</Card.Header>
-            <ListGroup variant="flush">
-              {statsArray.map((stat, index) => (
-                <ListGroup.Item
-                  key={index}
-                  className="d-flex align-items-center"
-                >
-                  <span className="fw-bold text-end" style={{ width: "100px" }}>
-                    {stat.name}:
-                  </span>
-                  <span className="ms-3 me-2" style={{ width: "30px" }}>
-                    {stat.value}
-                  </span>
-                  <ProgressBar
-                    variant={stat.variant}
-                    now={(stat.value / MAX_BASE_STAT) * 100}
-                    className="flex-grow-1"
-                    label={`${stat.value}`}
-                  />
-                </ListGroup.Item>
-              ))}
-              <ListGroup.Item className="text-end fw-bold">
-                Totale Statistiche: {pokemonData.stats.totalStats}
-              </ListGroup.Item>
-            </ListGroup>
-
-            <Card.Header className="fs-5 fw-bold mt-3">Abilità</Card.Header>
-            <ListGroup variant="flush">
-              {pokemonData.abilities.map((ability) => (
-                <ListGroup.Item key={ability.idAbility}>
-                  <strong className="text-capitalize">{ability.name}:</strong>
-                  <span className="ms-2">{ability.description}</span>
-                </ListGroup.Item>
-              ))}
-            </ListGroup>
-          </Card>
-        </Col>
-      </Row>
-      <Row className="mt-4">
-        <Col>
-          <Card className="shadow-lg">
-            <Card.Header className="fs-5 fw-bold">
-              Mosse Apprendibili ({pokemonData.learnableMoves.length})
-            </Card.Header>
-            <div className="table-responsive">
-              <table className="table table-striped table-hover mb-0">
-                <thead>
-                  <tr>
-                    <th>Nome Mossa</th>
-                    <th>Potenza</th>
-                    <th>Precisione</th>
-                    <th>Descrizione</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {pokemonData.learnableMoves.map((move) => (
-                    <tr key={move.idMove}>
-                      <td className="fw-bold text-capitalize">{move.name}</td>
-                      <td>{move.power || "—"}</td>
-                      <td>{move.accuracy || "—"}</td>
-                      <td>{move.description}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          </Card>
-        </Col>
-      </Row>
-    </Container>
+            </Card>
+          </Col>
+        </Row>
+      </Container>
+    </div>
   );
 };
 
