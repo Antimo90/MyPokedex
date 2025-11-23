@@ -1,23 +1,79 @@
 import { useEffect, useState } from "react";
 import { Container, Row, Col, Alert, Spinner } from "react-bootstrap";
-import PokemonCard from "./PokemonCard.jsx";
+import PokemonCardUser from "./PokemonCardUser.jsx";
 
 const POKEMON_API_ENDPOINT = "http://localhost:3001/pokemon?page=0&size=151";
+const COLLECTION_API_ENDPOINT = "http://localhost:3001/users/me/collection";
+
+const getToken = () => {
+  let token = localStorage.getItem("token");
+  if (token && typeof token === "string" && token.startsWith("{token:")) {
+    try {
+      const match = token.match(/'([^']+)'/);
+      return match ? match[1] : null;
+    } catch (e) {
+      console.error("Errore nel parsing del token:", e);
+      return null;
+    }
+  }
+  return token;
+};
 
 const PokedexUser = () => {
   const [pokemonList, setPokemonList] = useState([]);
-
   const [isLoading, setIsLoading] = useState(true);
-
   const [error, setError] = useState(null);
+  const [selectedIds, setSelectedIds] = useState([]);
+
+  const togglePokemonSelection = (id) => {
+    setSelectedIds((prevIds) => {
+      if (prevIds.includes(id)) {
+        return prevIds.filter((pokemonId) => pokemonId !== id);
+      } else {
+        return [...prevIds, id];
+      }
+    });
+  };
+
+  const fetchUserCollection = () => {
+    const token = getToken();
+    if (!token) {
+      console.log("Utente non loggato, la collezione non verrà caricata.");
+      return;
+    }
+
+    const requestOptions = {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+    };
+
+    fetch(COLLECTION_API_ENDPOINT, requestOptions)
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error(
+            `Errore ${response.status}: Impossibile caricare la collezione.`
+          );
+        }
+        return response.json();
+      })
+      .then((data) => {
+        const capturedIds = data
+          .filter((up) => up.isCaptured)
+          .map((up) => up.pokemon.idPokemon);
+
+        setSelectedIds(capturedIds);
+        console.log("Collezione caricata:", capturedIds);
+      })
+      .catch((err) => {
+        console.error("Errore nel caricamento della collezione:", err);
+      });
+  };
 
   const fetchPokemon = () => {
-    let token = localStorage.getItem("token");
-
-    if (token && token.startsWith("{token:")) {
-      token = token.split("'")[1];
-      console.log("Token Pulito:", token);
-    }
+    const token = getToken();
 
     const requestOptions = {
       method: "GET",
@@ -41,11 +97,9 @@ const PokedexUser = () => {
       })
       .then((data) => {
         setPokemonList(data.content || data);
-        console.log("JSON ricevuto dal Backend:", data);
       })
       .catch((err) => {
         console.error("Errore nel caricamento dei Pokémon:", err);
-
         setError("Caricamento fallito. " + err.message);
       })
       .finally(() => {
@@ -53,8 +107,51 @@ const PokedexUser = () => {
       });
   };
 
+  const handleCaptureToggle = (pokemonId, shouldCapture) => {
+    const token = getToken();
+    if (!token) {
+      alert("Devi effettuare l'accesso per catturare Pokémon.");
+      return;
+    }
+
+    const method = shouldCapture ? "POST" : "DELETE";
+    const payload = {
+      pokemonId: pokemonId,
+      isShiny: false,
+    };
+
+    fetch(COLLECTION_API_ENDPOINT, {
+      method: method,
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(payload),
+    })
+      .then((response) => {
+        if (!response.ok) {
+          if (response.status !== 204) {
+            return response.json().then((errorData) => {
+              throw new Error(
+                errorData.message ||
+                  `Errore API: ${response.status} ${response.statusText}`
+              );
+            });
+          }
+        }
+      })
+      .then(() => {
+        togglePokemonSelection(pokemonId);
+      })
+      .catch((error) => {
+        console.error("Errore nell'API Collection:", error);
+        alert(error.message);
+      });
+  };
+
   useEffect(() => {
     fetchPokemon();
+    fetchUserCollection();
   }, []);
 
   return (
@@ -94,7 +191,11 @@ const PokedexUser = () => {
         <Row xs={2} sm={3} md={4} lg={5} xl={6} className="g-4 mt-3">
           {pokemonList.map((pokemon) => (
             <Col key={pokemon.idPokemon}>
-              <PokemonCard pokemon={pokemon} />
+              <PokemonCardUser
+                pokemon={pokemon}
+                onCaptureToggle={handleCaptureToggle}
+                isSelected={selectedIds.includes(pokemon.idPokemon)}
+              />
             </Col>
           ))}
         </Row>

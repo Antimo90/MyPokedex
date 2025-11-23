@@ -133,8 +133,52 @@
 }
 
 .col-descrizione {
-  /* Imposta una larghezza massima per la colonna */
   max-width: 300px;
-  /* (Opzionale) Forza il testo ad andare a capo in modo più aggressivo */
   word-wrap: break-word;
+}
+
+.pokeball-select-area {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  width: 15px;
+  height: 15px;
+  background-color: rgba(255, 255, 255, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  border-radius: 5px;
+  cursor: pointer;
+  z-index: 10;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: background-color 0.2s ease;
+}
+
+.pokeball-select-area:hover {
+  background-color: rgba(255, 255, 255, 0.3);
+}
+
+.pokeball-icon {
+  width: 200%;
+  height: 200%;
+  object-fit: contain;
+  filter: drop-shadow(0 0 2px rgba(0, 0, 0, 0.5));
+}
+
+.pokemon-image {
+  z-index: 2;
+  transition: filter 0.5s ease-in-out;
+}
+
+.pokemon-black {
+  filter: grayscale(100%) brightness(0);
+}
+
+.pokemon-colored {
+  filter: grayscale(0%) brightness(1);
+}
+
+.pokemon-selected {
+  border: 2px solid #ffcb05;
+  box-shadow: 0 0 15px rgba(255, 203, 5, 0.7);
 }

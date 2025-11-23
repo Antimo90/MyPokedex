@@ -21,8 +21,8 @@ function App() {
           <Route path="/" element={<HomePublic />} />
           <Route path="/register" element={<MyRegister />} />
           <Route path="/login" element={<MyLogin />} />
-          <Route path="/pokedex-pubblico" element={<PokedexUser />} />
-          <Route path="/pokedex" element={<Pokedex />} />
+          <Route path="/pokedex-pubblico" element={<Pokedex />} />
+          <Route path="/pokedex" element={<PokedexUser />} />
           <Route path="/pokemon/:idPokemon" element={<PokemonDetails />} />
         </Routes>
 

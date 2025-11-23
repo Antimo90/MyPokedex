@@ -1,11 +1,10 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import {
   Container,
   Row,
   Col,
   Card,
-  Badge,
   ListGroup,
   ProgressBar,
   Alert,
