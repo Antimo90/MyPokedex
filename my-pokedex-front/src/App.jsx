@@ -10,6 +10,7 @@ import Pokedex from "./components/Pokedex.jsx";
 import PokemonDetails from "./components/PokemonDetails.jsx";
 import ScrollToTop from "./components/ScrollToTop";
 import PokedexUser from "./components/PokedexUser.jsx";
+import Settings from "./components/Settings.jsx";
 
 function App() {
   return (
@@ -24,6 +25,7 @@ function App() {
           <Route path="/pokedex-pubblico" element={<Pokedex />} />
           <Route path="/pokedex" element={<PokedexUser />} />
           <Route path="/pokemon/:idPokemon" element={<PokemonDetails />} />
+          <Route path="/setting" element={<Settings />} />
         </Routes>
 
         <MyFooter />

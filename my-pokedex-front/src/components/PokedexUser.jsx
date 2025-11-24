@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { Container, Row, Col, Alert, Spinner, Button } from "react-bootstrap";
+import { useNavigate } from "react-router-dom";
 import PokemonCardUser from "./PokemonCardUser.jsx";
 
 const POKEMON_API_ENDPOINT = "http://localhost:3001/pokemon?page=0&size=151";
@@ -27,6 +28,7 @@ const PokedexUser = () => {
   const [selectedIds, setSelectedIds] = useState([]);
   const [username, setUsername] = useState(null);
   const [avatarUrl, setAvatarUrl] = useState(null);
+  const navigate = useNavigate();
 
   const togglePokemonSelection = (id) => {
     setSelectedIds((prevIds) => {
@@ -190,9 +192,17 @@ const PokedexUser = () => {
   }, []);
 
   const handleSettingsClick = () => {
-    console.log("Reindirizza alla pagina di Settings!");
+    navigate("/setting");
+  };
 
-    alert("Funzionalità Settings in arrivo!");
+  const handleLogoutClick = () => {
+    localStorage.removeItem("token");
+
+    setUsername(null);
+    setAvatarUrl(null);
+    setPokemonList([]);
+
+    navigate("/");
   };
 
   return (
@@ -208,18 +218,18 @@ const PokedexUser = () => {
         {username && (
           <Row className="align-items-center mb-3 mt-5">
             <Col xs={6} className="d-flex justify-content-start">
-              <div className="d-flex align-items-center">
+              <div className="d-flex flex-column align-items-center">
                 {avatarUrl && (
                   <img
                     src={avatarUrl}
                     alt={`${username}'s Avatar`}
                     style={{
-                      width: "50px",
-                      height: "50px",
+                      width: "100px",
+                      height: "100px",
                       borderRadius: "50%",
                       objectFit: "cover",
-                      marginRight: "10px",
-                      border: "2px solid #ff4500",
+                      marginBottom: "5px",
+                      border: "4px solid #ff4500",
                     }}
                   />
                 )}
@@ -230,11 +240,20 @@ const PokedexUser = () => {
 
             <Col xs={6} className="d-flex justify-content-end">
               <Button
-                variant="outline-secondary"
+                variant="danger"
                 onClick={handleSettingsClick}
-                style={{ borderColor: "#ff4500", color: "#ff4500" }}
+                style={{ borderColor: "#ff4500", color: "#efe9e7ff" }}
               >
                 Settings
+              </Button>
+
+              <Button
+                variant="danger"
+                onClick={handleLogoutClick}
+                className="ms-2"
+                style={{ borderColor: "#ff4500", color: "#efe9e7ff" }}
+              >
+                Log Out
               </Button>
             </Col>
           </Row>

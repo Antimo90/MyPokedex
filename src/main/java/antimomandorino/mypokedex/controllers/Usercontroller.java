@@ -5,7 +5,7 @@ import antimomandorino.mypokedex.entities.UserPokemon;
 import antimomandorino.mypokedex.exceptions.ValidationException;
 import antimomandorino.mypokedex.payloads.UserPasswordChangeDTO;
 import antimomandorino.mypokedex.payloads.UserPokemonRequestDTO;
-import antimomandorino.mypokedex.payloads.UserRegistrationDTO;
+import antimomandorino.mypokedex.payloads.UserProfileUpdateDTO;
 import antimomandorino.mypokedex.services.UserPokemonService;
 import antimomandorino.mypokedex.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,7 +41,7 @@ public class Usercontroller {
     // Modifica username ed email dell'utente autenticato
     @PutMapping("/me")
     public User updateProfile(@AuthenticationPrincipal User authenticatedUser,
-                              @RequestBody @Validated UserRegistrationDTO body,
+                              @RequestBody @Validated UserProfileUpdateDTO body,
                               BindingResult validationResult) {
         if (validationResult.hasErrors()) {
             throw new ValidationException(validationResult.getFieldErrors().stream().map(e -> e.getDefaultMessage()).toList());
