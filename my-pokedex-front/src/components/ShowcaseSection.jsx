@@ -34,6 +34,7 @@ const ShowcaseSection = () => (
           <Card.Img
             variant="top"
             src={newGeneration}
+            alt="nuova_generazione"
             style={{ height: "150px", objectFit: "cover" }}
           />
           <Card.Body className="cardBodyStyle">
@@ -51,6 +52,7 @@ const ShowcaseSection = () => (
           <Card.Img
             variant="top"
             src={battle}
+            alt="battaglie"
             style={{ height: "150px", objectFit: "cover" }}
           />
           <Card.Body className="cardBodyStyle">
@@ -68,6 +70,7 @@ const ShowcaseSection = () => (
           <Card.Img
             variant="top"
             src={hoho}
+            alt="ho_ho"
             style={{ height: "150px", objectFit: "cover" }}
           />
           <Card.Body className="cardBodyStyle">
@@ -85,6 +88,7 @@ const ShowcaseSection = () => (
           <Card.Img
             variant="top"
             src={torneo}
+            alt="torneo"
             style={{ height: "150px", objectFit: "cover" }}
           />
           <Card.Body className="cardBodyStyle">

@@ -38,6 +38,10 @@ public class Type {
         this.name = name;
     }
 
+    public String getColorHex() {
+        return colorHex;
+    }
+
     public void setColorHex(String colorHex) {
         this.colorHex = colorHex;
     }

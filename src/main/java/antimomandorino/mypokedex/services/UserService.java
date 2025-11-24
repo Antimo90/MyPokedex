@@ -8,6 +8,7 @@ import antimomandorino.mypokedex.exceptions.BadRequestException;
 import antimomandorino.mypokedex.exceptions.NotFoundException;
 import antimomandorino.mypokedex.exceptions.UnauthorizedException;
 import antimomandorino.mypokedex.payloads.UserPasswordChangeDTO;
+import antimomandorino.mypokedex.payloads.UserProfileUpdateDTO;
 import antimomandorino.mypokedex.payloads.UserRegistrationDTO;
 import antimomandorino.mypokedex.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -96,7 +97,7 @@ public class UserService {
     }
 
     //Aggiorna username ed email di un utente esistente.
-    public User updateUser(Long userId, UserRegistrationDTO payload) {
+    public User updateUser(Long userId, UserProfileUpdateDTO payload) {
 
         // Trovo l'utente da aggiornare.
         User userFound = this.findUserById(userId);

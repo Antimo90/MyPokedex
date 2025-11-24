@@ -62,6 +62,8 @@ public class UserPokemonService {
 
         userPokemonRepository.delete(found.get());
     }
+
+
 }
 
 

@@ -1,6 +1,7 @@
-import { Container, Button, Row, Col, Card } from "react-bootstrap";
+import { Container, Button, Row, Col } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import ShowcaseSection from "./ShowcaseSection";
+import pokeball from "../assets/pokeball.png";
 
 const HomePublic = () => {
   const navigate = useNavigate();
@@ -15,18 +16,23 @@ const HomePublic = () => {
     >
       <Container className="text-center ">
         <Row
-          className="justify-content-center pt-5 pb-5 mb-5"
+          className="justify-content-center pt-5 pb-5 mb-5 "
           style={{
-            backgroundColor: "#cc0000",
+            backgroundImage: `url(${pokeball})`,
+            backgroundPosition: "center",
+            backgroundSize: "cover",
             borderRadius: "10px",
             color: "white",
           }}
         >
           <Col md={10}>
-            <h1 className="display-4 fw-bold">
+            <h1 className="display-4 fw-bold mb-5 mt-5 pb-3">
               Benvenuto nella Pokedex di Kanto
             </h1>
-            <p className="lead mt-3 mb-4">
+            <p
+              className="lead mt-5 mb-4 fw-bold pt-5 "
+              style={{ color: "rgba(240, 35, 35, 1)" }}
+            >
               Cattura, organizza e gestisci i tuoi 151 Pokémon di prima
               generazione!
             </p>
@@ -40,7 +46,7 @@ const HomePublic = () => {
               Accedi
             </Button>
             <Button
-              variant="light"
+              variant="warning"
               size="lg"
               className="fw-bold"
               onClick={() => navigate("/register")}

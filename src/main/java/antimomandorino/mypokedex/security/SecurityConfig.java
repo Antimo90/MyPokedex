@@ -24,20 +24,16 @@ public class SecurityConfig {
 
     @Bean
     SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
-
         // 1. Disabilitazione dell'autenticazione basata sul form di default di Spring Security
         httpSecurity.formLogin(formLogin -> formLogin.disable());
         // 2. Disattivazione della protezione CSRF
         httpSecurity.csrf(csrf -> csrf.disable());
-        // 3. Disabilitazione delle sessioni: l'API è stateless, l'autenticazione sarà gestita da token.
+        // 3. Disabilitazione delle sessioni
         httpSecurity.sessionManagement(sessions -> sessions.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
-        httpSecurity.authorizeHttpRequests(req -> req.requestMatchers("/auths/**").permitAll().anyRequest().authenticated());
 
-
-        // Configurazione di default per il collegamento con il FRONT_END (per gestire le richieste CORS).
+        // Configurazione di default per il collegamento di con il FRONT_END
         httpSecurity.cors(Customizer.withDefaults());
 
-        // Restituisco la catena di filtri configurata.
         return httpSecurity.build();
     }
 

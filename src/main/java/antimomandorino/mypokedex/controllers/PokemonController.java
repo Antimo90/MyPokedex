@@ -35,13 +35,12 @@ public class PokemonController {
     }
 
     @GetMapping("/{idPokemon}")
-    @PreAuthorize("hasAnyAuthority('ADMIN','USER')")
+    // @PreAuthorize("hasAnyAuthority('ADMIN','USER')")
     public Pokemon getSinglePokemon(@PathVariable int idPokemon) {
         return this.pokemonService.findPokemonById(idPokemon);
     }
 
     @GetMapping
-    @PreAuthorize("hasAnyAuthority('ADMIN', 'USER')")
     public Page<Pokemon> getAllPokemon(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size,
