@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Container, Row, Col, Alert, Spinner } from "react-bootstrap";
+import { Container, Row, Col, Alert, Spinner, Button } from "react-bootstrap";
 import PokemonCardUser from "./PokemonCardUser.jsx";
 
 const POKEMON_API_ENDPOINT = "http://localhost:3001/pokemon?page=0&size=151";
@@ -26,6 +26,7 @@ const PokedexUser = () => {
   const [error, setError] = useState(null);
   const [selectedIds, setSelectedIds] = useState([]);
   const [username, setUsername] = useState(null);
+  const [avatarUrl, setAvatarUrl] = useState(null);
 
   const togglePokemonSelection = (id) => {
     setSelectedIds((prevIds) => {
@@ -62,6 +63,7 @@ const PokedexUser = () => {
       })
       .then((data) => {
         setUsername(data.username);
+        setAvatarUrl(data.avatarUrl);
       })
       .catch((err) => {
         console.error("Errore nel caricamento del profilo utente:", err);
@@ -187,6 +189,12 @@ const PokedexUser = () => {
     fetchUserProfile();
   }, []);
 
+  const handleSettingsClick = () => {
+    console.log("Reindirizza alla pagina di Settings!");
+
+    alert("Funzionalità Settings in arrivo!");
+  };
+
   return (
     <div style={{ background: "#1a2234" }}>
       <Container className="py-5" style={{ minHeight: "80vh" }}>
@@ -197,7 +205,40 @@ const PokedexUser = () => {
             </h1>
           </div>
         </div>
-        <hr />
+        {username && (
+          <Row className="align-items-center mb-3 mt-5">
+            <Col xs={6} className="d-flex justify-content-start">
+              <div className="d-flex align-items-center">
+                {avatarUrl && (
+                  <img
+                    src={avatarUrl}
+                    alt={`${username}'s Avatar`}
+                    style={{
+                      width: "50px",
+                      height: "50px",
+                      borderRadius: "50%",
+                      objectFit: "cover",
+                      marginRight: "10px",
+                      border: "2px solid #ff4500",
+                    }}
+                  />
+                )}
+
+                <span className="text-light fw-bold">{username}</span>
+              </div>
+            </Col>
+
+            <Col xs={6} className="d-flex justify-content-end">
+              <Button
+                variant="outline-secondary"
+                onClick={handleSettingsClick}
+                style={{ borderColor: "#ff4500", color: "#ff4500" }}
+              >
+                Settings
+              </Button>
+            </Col>
+          </Row>
+        )}
 
         {isLoading && (
           <div className="text-center mt-5">
