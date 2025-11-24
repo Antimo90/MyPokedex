@@ -1,5 +1,6 @@
 package antimomandorino.mypokedex.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.NoArgsConstructor;
 
@@ -9,6 +10,7 @@ import java.util.Set;
 @Entity
 @Table(name = "pokemon")
 @NoArgsConstructor
+@JsonIgnoreProperties({"userCollections"})
 public class Pokemon {
 
     @Id

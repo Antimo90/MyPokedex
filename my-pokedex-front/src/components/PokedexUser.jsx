@@ -57,6 +57,7 @@ const PokedexUser = () => {
             `Errore ${response.status}: Impossibile caricare la collezione.`
           );
         }
+
         return response.json();
       })
       .then((data) => {
@@ -139,6 +140,8 @@ const PokedexUser = () => {
             });
           }
         }
+
+        return null;
       })
       .then(() => {
         togglePokemonSelection(pokemonId);
