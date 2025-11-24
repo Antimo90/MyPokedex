@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import {
   Container,
   Row,
@@ -9,6 +9,7 @@ import {
   ProgressBar,
   Alert,
   Spinner,
+  Button,
 } from "react-bootstrap";
 
 const MAX_BASE_STAT = 255;
@@ -19,11 +20,15 @@ const formatDescription = (desc) => desc.replace(/\f/g, " ");
 
 const PokemonDetails = () => {
   const { idPokemon } = useParams();
-
+  const navigate = useNavigate();
   const [pokemonData, setPokemonData] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
   const [isShiny, setIsShiny] = useState(false);
+
+  const handleGoBackToPokedex = () => {
+    navigate("/pokedex");
+  };
 
   const fetchPokemonDetails = () => {
     const POKEMON_DETAIL_ENDPOINT = `http://localhost:3001/pokemon/${idPokemon}`;
@@ -125,6 +130,18 @@ const PokemonDetails = () => {
   return (
     <div style={{ background: "#1a2234" }}>
       <Container className="py-5" style={{ minHeight: "80vh" }}>
+        <div className="mb-4">
+          <Button
+            variant="outline-warning"
+            onClick={handleGoBackToPokedex}
+            style={{
+              color: "#FFCB05",
+              borderColor: "#FFCB05",
+            }}
+          >
+            ← Torna al Pokedex
+          </Button>
+        </div>
         <div className="pokedex-title-container">
           <div className="pokedex-title-shape">
             <h1 className="pokedex-title-text ">Pokedex</h1>

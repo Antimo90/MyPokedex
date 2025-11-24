@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
-import { Container, Row, Col, Alert, Spinner } from "react-bootstrap";
+import { Container, Row, Col, Alert, Spinner, Button } from "react-bootstrap";
+import { useNavigate } from "react-router-dom";
 import PokemonCard from "./PokemonCard.jsx";
 
 const POKEMON_API_ENDPOINT = "http://localhost:3001/pokemon?page=0&size=151";
@@ -10,6 +11,8 @@ const Pokedex = () => {
   const [isLoading, setIsLoading] = useState(true);
 
   const [error, setError] = useState(null);
+
+  const navigate = useNavigate();
 
   const fetchPokemon = () => {
     let token = localStorage.getItem("token");
@@ -57,9 +60,25 @@ const Pokedex = () => {
     fetchPokemon();
   }, []);
 
+  const handleGoBackToPokedex = () => {
+    navigate("/");
+  };
+
   return (
     <div style={{ background: "#1a2234" }}>
       <Container className="py-5" style={{ minHeight: "80vh" }}>
+        <div className="mb-4">
+          <Button
+            variant="outline-warning"
+            onClick={handleGoBackToPokedex}
+            style={{
+              color: "#FFCB05",
+              borderColor: "#FFCB05",
+            }}
+          >
+            ← Torna allla home
+          </Button>
+        </div>
         <div className="pokedex-title-container">
           <div className="pokedex-title-shape">
             <h1 className="pokedex-title-text">Pokedex</h1>

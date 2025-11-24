@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Container, Row, Col, Alert, Spinner, Button } from "react-bootstrap";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import PokemonCardUser from "./PokemonCardUser.jsx";
 
 const POKEMON_API_ENDPOINT = "http://localhost:3001/pokemon?page=0&size=151";
@@ -29,6 +29,10 @@ const PokedexUser = () => {
   const [username, setUsername] = useState(null);
   const [avatarUrl, setAvatarUrl] = useState(null);
   const navigate = useNavigate();
+  const location = useLocation();
+
+  const queryParams = new URLSearchParams(location.search);
+  const searchQuery = queryParams.get("q");
 
   const togglePokemonSelection = (id) => {
     setSelectedIds((prevIds) => {
@@ -98,7 +102,6 @@ const PokedexUser = () => {
       })
       .then((data) => {
         const capturedIds = data.map((up) => up.pokemon.idPokemon);
-
         setSelectedIds(capturedIds);
         console.log("Collezione caricata FINALE:", capturedIds);
       })
@@ -197,13 +200,19 @@ const PokedexUser = () => {
 
   const handleLogoutClick = () => {
     localStorage.removeItem("token");
-
     setUsername(null);
     setAvatarUrl(null);
     setPokemonList([]);
-
     navigate("/");
   };
+
+  const displayedPokemons = searchQuery
+    ? pokemonList.filter(
+        (pokemon) =>
+          pokemon.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          String(pokemon.idPokemon) === searchQuery.trim()
+      )
+    : pokemonList;
 
   return (
     <div style={{ background: "#1a2234" }}>
@@ -211,7 +220,7 @@ const PokedexUser = () => {
         <div className="pokedex-title-container">
           <div className="pokedex-title-shape">
             <h1 className="pokedex-title-text">
-              {username && `Benvenuto ${username} nel tuo Pokedex!`}{" "}
+              {username && `Benvenuto ${username} nel tuo Pokedex!`}
             </h1>
           </div>
         </div>
@@ -233,11 +242,9 @@ const PokedexUser = () => {
                     }}
                   />
                 )}
-
                 <span className="text-light fw-bold">{username}</span>
               </div>
             </Col>
-
             <Col xs={6} className="d-flex justify-content-end">
               <Button
                 variant="danger"
@@ -246,7 +253,6 @@ const PokedexUser = () => {
               >
                 Settings
               </Button>
-
               <Button
                 variant="danger"
                 onClick={handleLogoutClick}
@@ -257,6 +263,19 @@ const PokedexUser = () => {
               </Button>
             </Col>
           </Row>
+        )}
+
+        {searchQuery && (
+          <Alert variant="warning" className="text-center mt-3">
+            Risultati della ricerca per: **"{searchQuery}"**{" "}
+            <Button
+              variant="link"
+              onClick={() => navigate("/pokedex", { replace: true })}
+              className="p-0 ms-2 text-decoration-none"
+            >
+              (Annulla)
+            </Button>
+          </Alert>
         )}
 
         {isLoading && (
@@ -277,14 +296,16 @@ const PokedexUser = () => {
           </Alert>
         )}
 
-        {!isLoading && !error && pokemonList.length === 0 && (
+        {!isLoading && !error && displayedPokemons.length === 0 && (
           <Alert variant="info" className="mt-4 text-center">
-            Nessun Pokémon trovato nel database.
+            {searchQuery
+              ? `Nessun Pokémon trovato per "${searchQuery}". Prova un altro nome!`
+              : "Nessun Pokémon trovato nel database."}
           </Alert>
         )}
 
         <Row xs={2} sm={3} md={4} lg={5} xl={6} className="g-4 mt-3">
-          {pokemonList.map((pokemon) => (
+          {displayedPokemons.map((pokemon) => (
             <Col key={pokemon.idPokemon}>
               <PokemonCardUser
                 pokemon={pokemon}

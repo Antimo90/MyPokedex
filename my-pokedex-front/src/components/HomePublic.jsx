@@ -1,4 +1,4 @@
-import { Container, Button, Row, Col, Card } from "react-bootstrap";
+import { Container, Button, Row, Col } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import ShowcaseSection from "./ShowcaseSection";
 import pokeball from "../assets/pokeball.png";

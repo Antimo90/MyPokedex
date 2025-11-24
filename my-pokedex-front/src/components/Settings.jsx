@@ -9,6 +9,7 @@ import {
   Spinner,
   Card,
 } from "react-bootstrap";
+import { useNavigate } from "react-router-dom";
 
 const PROFILE_API_ENDPOINT = "http://localhost:3001/users/me";
 
@@ -44,6 +45,7 @@ const Settings = () => {
   const [selectedAvatarId, setSelectedAvatarId] = useState(null);
   const [isAvatarUpdating, setIsAvatarUpdating] = useState(false);
   const [isShiny, setIsShiny] = useState(false);
+  const navigate = useNavigate();
 
   const POKEMON_API_ENDPOINT = "http://localhost:3001/pokemon?page=0&size=151";
 
@@ -289,11 +291,27 @@ const Settings = () => {
     );
   }
 
+  const handleGoBackToPokedex = () => {
+    navigate("/pokedex");
+  };
+
   return (
     <div
       style={{ background: "#1a2234", color: "#f8f9fa", minHeight: "100vh" }}
     >
       <Container className="py-5">
+        <div className="mb-4">
+          <Button
+            variant="outline-warning"
+            onClick={handleGoBackToPokedex}
+            style={{
+              color: "#FFCB05",
+              borderColor: "#FFCB05",
+            }}
+          >
+            ← Torna al Pokedex
+          </Button>
+        </div>
         <h2 className="mb-4 text-center" style={{ color: "#FFCB05" }}>
           ⚙️ Impostazioni Utente
         </h2>
@@ -344,7 +362,6 @@ const Settings = () => {
                     }}
                   />
                 </Form.Group>
-
                 <Form.Group className="mb-3">
                   <Form.Label
                     style={{
@@ -366,7 +383,6 @@ const Settings = () => {
                     }}
                   />
                 </Form.Group>
-
                 <Button variant="danger" type="submit" className="mt-2 w-100">
                   Salva Profilo
                 </Button>
