@@ -4,6 +4,7 @@ import PokemonCardUser from "./PokemonCardUser.jsx";
 
 const POKEMON_API_ENDPOINT = "http://localhost:3001/pokemon?page=0&size=151";
 const COLLECTION_API_ENDPOINT = "http://localhost:3001/users/me/collection";
+const PROFILE_API_ENDPOINT = "http://localhost:3001/users/me";
 
 const getToken = () => {
   let token = localStorage.getItem("token");
@@ -24,6 +25,7 @@ const PokedexUser = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
   const [selectedIds, setSelectedIds] = useState([]);
+  const [username, setUsername] = useState(null);
 
   const togglePokemonSelection = (id) => {
     setSelectedIds((prevIds) => {
@@ -33,6 +35,37 @@ const PokedexUser = () => {
         return [...prevIds, id];
       }
     });
+  };
+
+  const fetchUserProfile = () => {
+    const token = getToken();
+    if (!token) {
+      return;
+    }
+
+    const requestOptions = {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+    };
+
+    fetch(PROFILE_API_ENDPOINT, requestOptions)
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error(
+            `Errore ${response.status}: Impossibile caricare il profilo.`
+          );
+        }
+        return response.json();
+      })
+      .then((data) => {
+        setUsername(data.username);
+      })
+      .catch((err) => {
+        console.error("Errore nel caricamento del profilo utente:", err);
+      });
   };
 
   const fetchUserCollection = () => {
@@ -57,16 +90,13 @@ const PokedexUser = () => {
             `Errore ${response.status}: Impossibile caricare la collezione.`
           );
         }
-
         return response.json();
       })
       .then((data) => {
-        const capturedIds = data
-          .filter((up) => up.isCaptured)
-          .map((up) => up.pokemon.idPokemon);
+        const capturedIds = data.map((up) => up.pokemon.idPokemon);
 
         setSelectedIds(capturedIds);
-        console.log("Collezione caricata:", capturedIds);
+        console.log("Collezione caricata FINALE:", capturedIds);
       })
       .catch((err) => {
         console.error("Errore nel caricamento della collezione:", err);
@@ -140,7 +170,6 @@ const PokedexUser = () => {
             });
           }
         }
-
         return null;
       })
       .then(() => {
@@ -148,13 +177,14 @@ const PokedexUser = () => {
       })
       .catch((error) => {
         console.error("Errore nell'API Collection:", error);
-        alert(error.message);
+        alert(`Impossibile aggiornare la collezione: ${error.message}`);
       });
   };
 
   useEffect(() => {
     fetchPokemon();
     fetchUserCollection();
+    fetchUserProfile();
   }, []);
 
   return (
@@ -162,7 +192,9 @@ const PokedexUser = () => {
       <Container className="py-5" style={{ minHeight: "80vh" }}>
         <div className="pokedex-title-container">
           <div className="pokedex-title-shape">
-            <h1 className="pokedex-title-text">Pokedex</h1>
+            <h1 className="pokedex-title-text">
+              {username && `Benvenuto ${username} nel tuo Pokedex!`}{" "}
+            </h1>
           </div>
         </div>
         <hr />
