@@ -4,101 +4,116 @@ import ShowcaseSection from "./ShowcaseSection";
 import pokeball from "../assets/pokeball.png";
 
 const HomePublic = () => {
+  // Inizializzo l'hook useNavigate che mi servirà per reindirizzare l'utente
   const navigate = useNavigate();
 
   return (
+    // Div esterno che imposta lo sfondo grigio chiaro e gestisce il padding verticale
     <div
       style={{
-        backgroundColor: "#d8d8d8ff",
+        backgroundColor: "#d8d8d8ff", // Colore di sfondo standard per il corpo della pagina
         paddingTop: "60px",
         paddingBottom: "40px",
       }}
     >
+      {/* Contenitore principale di Bootstrap centrato */}
       <Container className="text-center ">
+        {/* Prima riga: l'Hero Section/Banner di benvenuto */}
         <Row
           className="justify-content-center pt-5 pb-5 mb-5 "
+          // Stili in linea per creare l'effetto Pokeball come sfondo del banner
           style={{
-            backgroundImage: `url(${pokeball})`,
+            backgroundImage: `url(${pokeball})`, // Uso l'immagine importata
             backgroundPosition: "center",
-            backgroundSize: "cover",
-            borderRadius: "10px",
-            color: "white",
+            backgroundSize: "cover", // Assicura che l'immagine copra tutto lo spazio
+            borderRadius: "10px", // Angoli arrotondati per un look moderno
+            color: "white", // Testo bianco per contrastare lo sfondo scuro
           }}
         >
+          {/* Colonna centrale per contenere il testo e i bottoni */}
           <Col md={10}>
+            {/* Titolo principale */}
             <h1 className="display-4 fw-bold mb-5 mt-5 pb-3">
-              Benvenuto nella Pokedex di Kanto
+              Welcome to the Kanto Pokedex
             </h1>
+            {/* Sottotitolo descrittivo, con colore rosso Pokémon */}
             <p
               className="lead mt-5 mb-4 fw-bold pt-5 "
-              style={{ color: "rgba(240, 35, 35, 1)" }}
+              style={{ color: "rgba(240, 35, 35, 1)" }} // Rosso acceso
             >
-              Cattura, organizza e gestisci i tuoi 151 Pokémon di prima
-              generazione!
+              Capture, organize, and manage your first 151 Generation Pokémon!
             </p>
 
+            {/* Bottone per accedere alla pagina di Login */}
             <Button
-              variant="warning"
+              variant="warning" // Giallo (simile al colore elettrico/Pokémon)
               size="lg"
               className="me-3 fw-bold"
-              onClick={() => navigate("/login")}
+              onClick={() => navigate("/login")} // Funzione che reindirizza al login
             >
-              Accedi
+              Login
             </Button>
+            {/* Bottone per accedere alla pagina di Registrazione */}
             <Button
-              variant="warning"
+              variant="warning" // Anche questo Giallo
               size="lg"
               className="fw-bold"
-              onClick={() => navigate("/register")}
+              onClick={() => navigate("/register")} // Funzione che reindirizza alla registrazione
             >
-              Registrati Ora
+              Sign Up Now
             </Button>
           </Col>
         </Row>
 
+        {/* Seconda riga: Bottone per l'Anteprima Pubblica */}
         <Row className="justify-content-center mb-5">
           <Col md={8}>
+            {/* Bottone che porta direttamente all'elenco pubblico dei Pokémon */}
             <Button
-              variant="primary"
+              variant="primary" // Blu (colore standard di Bootstrap)
               size="lg"
               className="fw-bold"
               onClick={() => navigate("/pokedex-pubblico")}
             >
-              Controlla il Pokedex di Kanto (Anteprima)
+              Check the Kanto Pokedex (Preview)
             </Button>
+            {/* Testo di supporto/disclaimer sotto il bottone */}
             <p className="text-secondary mt-2 small">
-              Visualizza tutti i 151 Pokémon. Accesso completo e gestione solo
-              dopo l'accesso.
+              View all 151 Pokémon. Full access and management only after
+              logging in.
             </p>
           </Col>
         </Row>
 
+        {/* Terza riga: Sezione Feature/Vantaggi principali (3 colonne) */}
         <Row className="mb-5">
+          {/* Feature 1 */}
           <Col md={4}>
-            <h2 className="text-primary">Schede Complete</h2>
+            <h2 className="text-primary">Full Sheets</h2>
             <p>
-              Dati, statistiche e mosse per ogni Pokémon, incluse le versioni
-              shiny.
+              Data, stats, and moves for every Pokémon, including shiny
+              versions.
             </p>
           </Col>
+          {/* Feature 2 */}
           <Col md={4}>
-            <h2 className="text-primary">Organizzazione Facile</h2>
+            <h2 className="text-primary">Easy Organization</h2>
             <p>
-              Filtri avanzati per trovare il Pokémon giusto nella tua collezione
-              in un attimo.
+              Advanced filters to find the right Pokémon in your collection in
+              an instant.
             </p>
           </Col>
+          {/* Feature 3 */}
           <Col md={4}>
-            <h2 className="text-primary">Esperienza Dinamica</h2>
-            <p>
-              Interfaccia moderna e reattiva, ottimizzata per tutti i
-              dispositivi.
-            </p>
+            <h2 className="text-primary">Dynamic Experience</h2>
+            <p>Modern and responsive interface, optimized for all devices.</p>
           </Col>
         </Row>
 
+        {/* Quarta riga: Inclusione del componente ShowcaseSection (vetrina) */}
         <Row className="justify-content-center">
           <Col md={12}>
+            {/* Renderizzo la sezione vetrina, che mostra alcuni Pokémon in anteprima */}
             <ShowcaseSection />
           </Col>
         </Row>

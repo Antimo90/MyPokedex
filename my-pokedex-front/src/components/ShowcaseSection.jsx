@@ -14,7 +14,7 @@ const ShowcaseSection = () => (
     }}
   >
     <h3 className="text-center text-dark mb-4">
-      📢 Ultimi Aggiornamenti dal Mondo Pokémon
+      📢 Latest Updates from the Pokémon World
     </h3>
     <div
       style={{
@@ -34,11 +34,11 @@ const ShowcaseSection = () => (
           <Card.Img
             variant="top"
             src={newGeneration}
-            alt="nuova_generazione"
+            alt="new_generation"
             style={{ height: "150px", objectFit: "cover" }}
           />
           <Card.Body className="cardBodyStyle">
-            <Card.Title>La Nuova Generazione</Card.Title>
+            <Card.Title>The New Generation</Card.Title>
           </Card.Body>
         </Card>
       </a>
@@ -52,11 +52,11 @@ const ShowcaseSection = () => (
           <Card.Img
             variant="top"
             src={battle}
-            alt="battaglie"
+            alt="Battles"
             style={{ height: "150px", objectFit: "cover" }}
           />
           <Card.Body className="cardBodyStyle">
-            <Card.Title>Battaglie Emozionanti</Card.Title>
+            <Card.Title>Exciting Battles</Card.Title>
           </Card.Body>
         </Card>
       </a>
@@ -74,7 +74,7 @@ const ShowcaseSection = () => (
             style={{ height: "150px", objectFit: "cover" }}
           />
           <Card.Body className="cardBodyStyle">
-            <Card.Title>Il Mistero di Ho-Oh</Card.Title>
+            <Card.Title>The Mystery of Ho-Oh</Card.Title>
           </Card.Body>
         </Card>
       </a>
@@ -88,11 +88,11 @@ const ShowcaseSection = () => (
           <Card.Img
             variant="top"
             src={torneo}
-            alt="torneo"
+            alt="Tournament"
             style={{ height: "150px", objectFit: "cover" }}
           />
           <Card.Body className="cardBodyStyle">
-            <Card.Title>Nuovo torneo di pokemon</Card.Title>
+            <Card.Title>New Pokémon Tournament</Card.Title>
           </Card.Body>
         </Card>
       </a>
@@ -104,7 +104,7 @@ const ShowcaseSection = () => (
           target="_blank"
           className="fw-bold button-down"
         >
-          Novità »
+          News »
         </Button>
       </div>
     </div>
