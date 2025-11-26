@@ -8,7 +8,7 @@ const PokemonCardUser = ({ pokemon, isSelected, onCaptureToggle }) => {
   };
 
   if (!pokemon) {
-    return <Card className="p-3 text-center">Pokémon non trovato.</Card>;
+    return <Card className="p-3 text-center">Pokémon not found.</Card>;
   }
 
   const isLinkActive = isSelected && pokemon.idPokemon > 0;
@@ -46,7 +46,7 @@ const PokemonCardUser = ({ pokemon, isSelected, onCaptureToggle }) => {
       try {
         await onCaptureToggle(pokemon.idPokemon, shouldCapture);
       } catch (error) {
-        console.error("Errore durante la cattura/rilascio del Pokémon:", error);
+        console.error("Error during Pokémon capture/release:", error);
       }
     }
   };
@@ -70,7 +70,7 @@ const PokemonCardUser = ({ pokemon, isSelected, onCaptureToggle }) => {
         {isSelected && (
           <img
             src={PokeballIcon}
-            alt="Seleziona"
+            alt="Select"
             className="pokeball-icon pokeball-checked"
           />
         )}

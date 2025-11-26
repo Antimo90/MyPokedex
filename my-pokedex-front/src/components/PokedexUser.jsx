@@ -3,14 +3,17 @@ import { Container, Row, Col, Alert, Spinner, Button } from "react-bootstrap";
 import { useNavigate, useLocation } from "react-router-dom";
 import PokemonCardUser from "./PokemonCardUser.jsx";
 
+// Definisco gli endpoint API principali
 const POKEMON_API_ENDPOINT = "http://localhost:3001/pokemon?page=0&size=151";
 const COLLECTION_API_ENDPOINT = "http://localhost:3001/users/me/collection";
 const PROFILE_API_ENDPOINT = "http://localhost:3001/users/me";
 
 const getToken = () => {
   let token = localStorage.getItem("token");
+  // Questa è una sanitizzazione/correzione del token, nel caso in cui sia stato salvato in modo strano
   if (token && typeof token === "string" && token.startsWith("{token:")) {
     try {
+      // Cerco di estrarre il valore del token corretto
       const match = token.match(/'([^']+)'/);
       return match ? match[1] : null;
     } catch (e) {
@@ -22,34 +25,46 @@ const getToken = () => {
 };
 
 const PokedexUser = () => {
+  // Stato per conservare la lista di tutti i Pokémon
   const [pokemonList, setPokemonList] = useState([]);
+  // Stato per gestire il caricamento
   const [isLoading, setIsLoading] = useState(true);
+  // Stato per gestire eventuali messaggi di errore
   const [error, setError] = useState(null);
+  // Stato array di ID dei Pokémon che l'utente ha catturato
   const [selectedIds, setSelectedIds] = useState([]);
+  // Stato per memorizzare lo username dell'utente
   const [username, setUsername] = useState(null);
+  // Stato per memorizzare l'URL dell'avatar
   const [avatarUrl, setAvatarUrl] = useState(null);
+  // Hook per la navigazione programmatica
   const navigate = useNavigate();
+  // Hook per ottenere l'oggetto 'location'
   const location = useLocation();
-
+  // Estraggo i query params dalla URL
   const queryParams = new URLSearchParams(location.search);
   const searchQuery = queryParams.get("q");
 
+  // Funzione per aggiungere/rimuovere un ID dall'array dei selezionati
   const togglePokemonSelection = (id) => {
     setSelectedIds((prevIds) => {
       if (prevIds.includes(id)) {
+        // Se è già presente, lo rimuovo
         return prevIds.filter((pokemonId) => pokemonId !== id);
       } else {
+        // Altrimenti, lo aggiungo
         return [...prevIds, id];
       }
     });
   };
 
+  // Funzione per caricare i dati del profilo utente
   const fetchUserProfile = () => {
     const token = getToken();
     if (!token) {
-      return;
+      return; // Non procedo se non c'è il token
     }
-
+    // Opzioni per la richiesta GET, includendo l'autorizzazione Bearer
     const requestOptions = {
       method: "GET",
       headers: {
@@ -61,25 +76,26 @@ const PokedexUser = () => {
     fetch(PROFILE_API_ENDPOINT, requestOptions)
       .then((response) => {
         if (!response.ok) {
-          throw new Error(
-            `Errore ${response.status}: Impossibile caricare il profilo.`
-          );
+          // Se la risposta non è OK, lancio un errore
+          throw new Error(`Errore ${response.status}: Unable to load profile.`);
         }
         return response.json();
       })
       .then((data) => {
+        // Aggiorno gli stati con i dati del profilo
         setUsername(data.username);
         setAvatarUrl(data.avatarUrl);
       })
       .catch((err) => {
-        console.error("Errore nel caricamento del profilo utente:", err);
+        console.error("Error loading user profile:", err);
       });
   };
 
+  // Funzione per caricare la collezione (i Pokémon catturati) dell'utente
   const fetchUserCollection = () => {
     const token = getToken();
     if (!token) {
-      console.log("Utente non loggato, la collezione non verrà caricata.");
+      console.log("User not logged in, the collection will not be loaded.");
       return;
     }
 
@@ -95,21 +111,23 @@ const PokedexUser = () => {
       .then((response) => {
         if (!response.ok) {
           throw new Error(
-            `Errore ${response.status}: Impossibile caricare la collezione.`
+            `Errore ${response.status}: Unable to load collection.`
           );
         }
         return response.json();
       })
       .then((data) => {
+        // Estraggo solo gli ID dei Pokémon dalla risposta
         const capturedIds = data.map((up) => up.pokemon.idPokemon);
-        setSelectedIds(capturedIds);
-        console.log("Collezione caricata FINALE:", capturedIds);
+        setSelectedIds(capturedIds); // Imposto gli ID caricati come selezionati
+        console.log("Collection loaded FINAL:", capturedIds);
       })
       .catch((err) => {
-        console.error("Errore nel caricamento della collezione:", err);
+        console.error("Error loading collection:", err);
       });
   };
 
+  // Funzione per caricare la lista completa dei Pokémon dal database
   const fetchPokemon = () => {
     const token = getToken();
 
@@ -127,9 +145,7 @@ const PokedexUser = () => {
     fetch(POKEMON_API_ENDPOINT, requestOptions)
       .then((response) => {
         if (!response.ok) {
-          throw new Error(
-            `Errore ${response.status}: Impossibile caricare i Pokémon.`
-          );
+          throw new Error(`Errore ${response.status}: Unable to load Pokémon.`);
         }
         return response.json();
       })
@@ -137,22 +153,25 @@ const PokedexUser = () => {
         setPokemonList(data.content || data);
       })
       .catch((err) => {
-        console.error("Errore nel caricamento dei Pokémon:", err);
-        setError("Caricamento fallito. " + err.message);
+        console.error("Error loading Pokémon:", err);
+        setError("Loading failed. " + err.message);
       })
       .finally(() => {
         setIsLoading(false);
       });
   };
 
+  // Funzione per catturare o rilasciare un Pokémon tramite API
   const handleCaptureToggle = (pokemonId, shouldCapture) => {
     const token = getToken();
     if (!token) {
-      alert("Devi effettuare l'accesso per catturare Pokémon.");
+      // Blocco se l'utente non è loggato
+      alert("You must log in to catch Pokémon.");
       return;
     }
-
+    // Se shouldCapture è true uso POST (Cattura), altrimenti DELETE (Rilascio)
     const method = shouldCapture ? "POST" : "DELETE";
+    // Payload per la richiesta (assumo isShiny: false per ora)
     const payload = {
       pokemonId: pokemonId,
       isShiny: false,
@@ -164,15 +183,17 @@ const PokedexUser = () => {
         Authorization: `Bearer ${token}`,
         "Content-Type": "application/json",
       },
+      // Invio il payload solo se non è una DELETE
       body: JSON.stringify(payload),
     })
       .then((response) => {
         if (!response.ok) {
+          // La DELETE (rilascio) di successo spesso torna 204 No Content
           if (response.status !== 204) {
             return response.json().then((errorData) => {
               throw new Error(
                 errorData.message ||
-                  `Errore API: ${response.status} ${response.statusText}`
+                  `Error API: ${response.status} ${response.statusText}`
               );
             });
           }
@@ -183,21 +204,24 @@ const PokedexUser = () => {
         togglePokemonSelection(pokemonId);
       })
       .catch((error) => {
-        console.error("Errore nell'API Collection:", error);
-        alert(`Impossibile aggiornare la collezione: ${error.message}`);
+        console.error("Collection API Error:", error);
+        alert(`Unable to update the collection: ${error.message}`);
       });
   };
 
+  // useEffect per eseguire le chiamate API al montaggio del componente
   useEffect(() => {
     fetchPokemon();
     fetchUserCollection();
     fetchUserProfile();
   }, []);
 
+  // Funzione per reindirizzare alla pagina delle impostazioni
   const handleSettingsClick = () => {
     navigate("/setting");
   };
 
+  // Funzione per il Log Out
   const handleLogoutClick = () => {
     localStorage.removeItem("token");
     setUsername(null);
@@ -206,6 +230,7 @@ const PokedexUser = () => {
     navigate("/");
   };
 
+  // Logica di filtraggio: se c'è una ricerca (searchQuery), filtro la lista
   const displayedPokemons = searchQuery
     ? pokemonList.filter(
         (pokemon) =>
@@ -220,7 +245,7 @@ const PokedexUser = () => {
         <div className="pokedex-title-container">
           <div className="pokedex-title-shape">
             <h1 className="pokedex-title-text">
-              {username && `Benvenuto ${username} nel tuo Pokedex!`}
+              {username && `Welcome ${username} in your Pokédex!`}
             </h1>
           </div>
         </div>
@@ -251,7 +276,7 @@ const PokedexUser = () => {
                 onClick={handleSettingsClick}
                 style={{ borderColor: "#ff4500", color: "#efe9e7ff" }}
               >
-                Settings
+                ⚙️ Settings
               </Button>
               <Button
                 variant="danger"
@@ -267,13 +292,13 @@ const PokedexUser = () => {
 
         {searchQuery && (
           <Alert variant="warning" className="text-center mt-3">
-            Risultati della ricerca per: **"{searchQuery}"**{" "}
+            Search results for: **"{searchQuery}"**{" "}
             <Button
               variant="link"
               onClick={() => navigate("/pokedex", { replace: true })}
               className="p-0 ms-2 text-decoration-none"
             >
-              (Annulla)
+              (Cancel)
             </Button>
           </Alert>
         )}
@@ -286,7 +311,7 @@ const PokedexUser = () => {
               role="status"
               className="me-2"
             />
-            <p className="lead text-secondary">Caricamento Pokémon...</p>
+            <p className="lead text-secondary">Loading Pokémon...</p>
           </div>
         )}
 
@@ -299,8 +324,8 @@ const PokedexUser = () => {
         {!isLoading && !error && displayedPokemons.length === 0 && (
           <Alert variant="info" className="mt-4 text-center">
             {searchQuery
-              ? `Nessun Pokémon trovato per "${searchQuery}". Prova un altro nome!`
-              : "Nessun Pokémon trovato nel database."}
+              ? `No Pokémon found for "${searchQuery}". Try another name!`
+              : "No Pokémon found in the database."}
           </Alert>
         )}
 

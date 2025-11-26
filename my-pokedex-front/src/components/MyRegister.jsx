@@ -10,29 +10,38 @@ import {
 } from "react-bootstrap";
 import sfondo from "../assets/SfondoRegistrazione.jpg";
 
+// Definisco l'endpoint API per la richiesta di registrazione
 const REGISTER_API_ENDPOINT = "http://localhost:3001/auths/register";
 
 const MyRegister = () => {
+  // Stato per i dati del form
   const [formData, setFormData] = useState({
     username: "",
     email: "",
     password: "",
-    confirmPassword: "",
+    confirmPassword: "", // Campo aggiuntivo per la verifica lato client
   });
 
+  // Stato per gestire gli errori di validazione del form
   const [errors, setErrors] = useState({});
+  // Stato per feedback di successo della registrazione
   const [registrationSuccess, setRegistrationSuccess] = useState(false);
 
+  // Stato per mostrare lo spinner durante la chiamata API
   const [isLoading, setIsLoading] = useState(false);
+  // Stato per mostrare errori generici o specifici dal server
   const [serverError, setServerError] = useState(null);
 
+  // Gestore del cambiamento per gli input del form
   const handleChange = (e) => {
     const { id, value } = e.target;
+    // Aggiorno il formData mantenendo gli altri campi
     setFormData({
       ...formData,
       [id]: value,
     });
 
+    // Rimuovo l'errore specifico se l'utente ricomincia a scrivere nel campo
     if (errors[id]) {
       setErrors((prevErrors) => {
         const newErrors = { ...prevErrors };
@@ -42,59 +51,69 @@ const MyRegister = () => {
     }
   };
 
+  // Funzione di validazione lato client
   const validate = () => {
     let newErrors = {};
     const { username, email, password, confirmPassword } = formData;
 
+    // Validazione Username
     if (!username.trim()) {
-      newErrors.username = "L'username è obbligatorio.";
+      newErrors.username = "The username is required.";
     }
 
+    // Validazione Email
     if (!email) {
-      newErrors.email = "L'email è obbligatoria.";
+      newErrors.email = "The email is required.";
     } else if (!/\S+@\S+\.\S+/.test(email)) {
-      newErrors.email = "L'indirizzo email non è valido.";
+      // Regex base per la validazione del formato email
+      newErrors.email = "The email address is invalid.";
     }
 
+    // Validazione Password (lunghezza minima)
     if (password.length < 8) {
-      newErrors.password = "La password deve contenere almeno 8 caratteri.";
+      newErrors.password = "The password must contain at least 8 characters.";
     }
 
+    // Validazione Conferma Password (deve corrispondere)
     if (password !== confirmPassword) {
-      newErrors.confirmPassword = "Le password non corrispondono.";
+      newErrors.confirmPassword = "Passwords do not match.";
     }
 
     setErrors(newErrors);
-
+    // Ritorna true se l'oggetto errors è vuoto
     return Object.keys(newErrors).length === 0;
   };
 
+  // Gestore per l'invio del form (submit)
   const handleSubmit = (e) => {
     e.preventDefault();
-    setRegistrationSuccess(false);
-    setServerError(null);
+    setRegistrationSuccess(false); // Resetto stato successo
+    setServerError(null); // Resetto errori server
 
     if (!validate()) {
-      console.log("Errore di validazione lato client.");
+      console.log("Client-side validation error.");
       return;
     }
 
-    setIsLoading(true);
+    setIsLoading(true); // Attivo lo stato di caricamento
 
+    // Destructuring per creare 'dataToSend' e omettere 'confirmPassword'
     const { confirmPassword: _, ...dataToSend } = formData;
 
+    // Chiamata Fetch all'API di registrazione
     fetch(REGISTER_API_ENDPOINT, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify(dataToSend),
+      body: JSON.stringify(dataToSend), // Invio solo username, email e password
     })
       .then((response) => {
         if (response.ok) {
           return response.json();
         }
 
+        // Gestione degli errori HTTP, creo un oggetto Error con status e messaggio
         return response.json().then((errorData) => {
           const error = new Error(
             errorData.message || `Errore HTTP: ${response.status}`
@@ -105,9 +124,10 @@ const MyRegister = () => {
         });
       })
       .then((data) => {
-        console.log("Registrazione riuscita:", data);
-        setRegistrationSuccess(true);
+        console.log("Registration successful:", data);
+        setRegistrationSuccess(true); // Imposto il messaggio di successo
 
+        // Resetto i campi del form dopo una registrazione riuscita
         setFormData({
           username: "",
           email: "",
@@ -116,31 +136,34 @@ const MyRegister = () => {
         });
       })
       .catch((error) => {
-        console.error("Errore di fetch o server:", error);
+        console.error("Fetch or server error:", error);
 
+        // Gestione specifica per errori comuni di registrazione (es. utente già esistente)
         if (error.status === 409 || error.status === 400) {
-          setServerError(error.message);
+          setServerError(error.message); // Uso il messaggio d'errore fornito dal server
         } else if (error.status) {
-          setServerError(
-            `Errore del server (${error.status}). Riprova più tardi.`
-          );
+          // Altri errori server
+          setServerError(`Server Error (${error.status}). Try again later.`);
         } else {
+          // Errore di connessione / rete
           setServerError(
-            "Impossibile connettersi al server. Controlla la tua connessione."
+            "Unable to connect to the server. Check your connection."
           );
         }
       })
       .finally(() => {
-        setIsLoading(false);
+        setIsLoading(false); // Disattivo il caricamento
       });
   };
 
+  // Inizio del rendering del componente
   return (
     <>
+      {/* Wrapper esterno con sfondo e centratura */}
       <div
         className="registration-page-wrapper d-flex justify-content-center align-items-center pb-5"
         style={{
-          backgroundImage: `url(${sfondo})`,
+          backgroundImage: `url(${sfondo})`, // Immagine di sfondo
           backgroundSize: "cover",
           backgroundPosition: "center",
           minHeight: "100vh",
@@ -150,28 +173,33 @@ const MyRegister = () => {
         <Container>
           <Row className="justify-content-center">
             <Col md={8} lg={6} xl={5}>
+              {/* Card per contenere il form */}
               <Card className="shadow-lg p-4 custom-card-opacity">
                 <Card.Body>
                   <h2 className="text-center mb-4 text-dark">
-                    Diventa un Allenatore!
+                    Become a Trainer!
                   </h2>
+                  {/* Visualizzazione Errore Server */}
                   {serverError && (
                     <Alert variant="danger" className="text-center">
                       {serverError}
                     </Alert>
                   )}
+                  {/* Visualizzazione Successo Registrazione */}
                   {registrationSuccess && (
                     <Alert variant="success" className="text-center">
-                      Registrazione avvenuta con successo! Vai al{" "}
-                      <a href="/login">Login</a>.
+                      Registration successful! Go to <a href="/login">Login</a>.{" "}
+                      {/* Link per il login */}
                     </Alert>
                   )}
+                  {/* Form di Registrazione */}
                   <Form onSubmit={handleSubmit}>
+                    {/* Campo Username */}
                     <Form.Group className="mb-3" controlId="username">
                       <Form.Label>Username</Form.Label>
                       <Form.Control
                         type="text"
-                        placeholder="Scegli il tuo nome da Allenatore"
+                        placeholder="Choose your Trainer name"
                         onChange={handleChange}
                         value={formData.username}
                         isInvalid={!!errors.username}
@@ -181,11 +209,12 @@ const MyRegister = () => {
                       </Form.Control.Feedback>
                     </Form.Group>
 
+                    {/* Campo Email */}
                     <Form.Group className="mb-3" controlId="email">
-                      <Form.Label>Indirizzo Email</Form.Label>
+                      <Form.Label>Email Address</Form.Label>
                       <Form.Control
                         type="email"
-                        placeholder="Inserisci l'email"
+                        placeholder="Enter the email"
                         onChange={handleChange}
                         value={formData.email}
                         isInvalid={!!errors.email}
@@ -195,15 +224,16 @@ const MyRegister = () => {
                       </Form.Control.Feedback>
 
                       <Form.Text className="text-muted">
-                        Non condivideremo la tua email con nessuno.
+                        We will not share your email with anyone.
                       </Form.Text>
                     </Form.Group>
 
+                    {/* Campo Password */}
                     <Form.Group className="mb-3" controlId="password">
                       <Form.Label>Password</Form.Label>
                       <Form.Control
                         type="password"
-                        placeholder="Password (almeno 8 caratteri)"
+                        placeholder="Password (at least 8 characters)"
                         onChange={handleChange}
                         value={formData.password}
                         isInvalid={!!errors.password}
@@ -213,11 +243,12 @@ const MyRegister = () => {
                       </Form.Control.Feedback>
                     </Form.Group>
 
+                    {/* Campo Conferma Password */}
                     <Form.Group className="mb-4" controlId="confirmPassword">
-                      <Form.Label>Conferma Password</Form.Label>
+                      <Form.Label>Confirm Password</Form.Label>
                       <Form.Control
                         type="password"
-                        placeholder="Conferma la Password"
+                        placeholder="Confirm Password"
                         onChange={handleChange}
                         value={formData.confirmPassword}
                         isInvalid={!!errors.confirmPassword}
@@ -227,6 +258,7 @@ const MyRegister = () => {
                       </Form.Control.Feedback>
                     </Form.Group>
 
+                    {/* Bottone di Registrazione con stato di caricamento */}
                     <Button
                       variant="success"
                       type="submit"
@@ -235,25 +267,27 @@ const MyRegister = () => {
                     >
                       {isLoading ? (
                         <>
+                          {/* Spinner di caricamento */}
                           <span
                             className="spinner-border spinner-border-sm me-2"
                             role="status"
                             aria-hidden="true"
                           ></span>
-                          Registrazione in corso...
+                          Signing up...
                         </>
                       ) : (
-                        "Registrati"
+                        "Sign Up" // Testo normale
                       )}
                     </Button>
 
+                    {/* Link per il Login */}
                     <p className="mt-3 text-center small">
-                      Hai già un account?{" "}
+                      Already have an account?{" "}
                       <a
                         href="/login"
                         className="text-primary text-decoration-none"
                       >
-                        Accedi qui
+                        Log in here
                       </a>
                     </p>
                   </Form>
@@ -267,4 +301,5 @@ const MyRegister = () => {
   );
 };
 
+// Esporto il componente Registrazione
 export default MyRegister;

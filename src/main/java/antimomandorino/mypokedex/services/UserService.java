@@ -11,6 +11,7 @@ import antimomandorino.mypokedex.payloads.UserPasswordChangeDTO;
 import antimomandorino.mypokedex.payloads.UserProfileUpdateDTO;
 import antimomandorino.mypokedex.payloads.UserRegistrationDTO;
 import antimomandorino.mypokedex.repositories.UserRepository;
+import antimomandorino.mypokedex.tools.MailgunSender;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -37,6 +38,9 @@ public class UserService {
 
     @Autowired
     private PokemonService pokemonService;
+
+    @Autowired
+    private MailgunSender mailgunSender;
 
     // Trova un utente tramite il suo ID.
     public User findUserById(Long idUser) {
@@ -92,6 +96,8 @@ public class UserService {
         // Salvo il nuovo utente.
         User savedUser = this.userRepository.save(newUser);
 
+        mailgunSender.sendRegistrationEmail(savedUser);
+
 
         return savedUser;
     }
@@ -119,7 +125,7 @@ public class UserService {
         // Aggiorno i campi.
         userFound.setUsername(payload.username());
         userFound.setEmail(payload.email());
-
+        mailgunSender.sendProfileUpdateEmail(userFound);
         // Salvo l'utente aggiornato.
         return this.userRepository.save(userFound);
     }
@@ -152,6 +158,8 @@ public class UserService {
 
         // Codifico e imposto la nuova password.
         userFound.setPassword(bcrypt.encode(payload.newPassword()));
+
+        mailgunSender.sendProfileUpdateEmail(userFound);
 
         // Salvo l'utente con la nuova password.
         userRepository.save(userFound);
@@ -210,6 +218,7 @@ public class UserService {
 
         // 2. Aggiorna l'URL dell'avatar.
         userFound.setAvatarUrl(newAvatarUrl);
+        mailgunSender.sendProfileUpdateEmail(userFound);
 
         return this.userRepository.save(userFound);
     }

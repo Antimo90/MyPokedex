@@ -63,7 +63,7 @@ const PokemonDetails = () => {
       .then((response) => {
         if (!response.ok) {
           throw new Error(
-            `Errore ${response.status}: Impossibile caricare i dettagli del Pokémon.`
+            `Errore ${response.status}: Unable to load Pokémon details.`
           );
         }
         return response.json();
@@ -72,8 +72,8 @@ const PokemonDetails = () => {
         setPokemonData(data);
       })
       .catch((err) => {
-        console.error("Errore nel caricamento dei dettagli Pokémon:", err);
-        setError("Caricamento fallito. " + err.message);
+        console.error("Error loading Pokémon details:", err);
+        setError("Loading failed. " + err.message);
       })
       .finally(() => {
         setIsLoading(false);
@@ -91,7 +91,7 @@ const PokemonDetails = () => {
     return (
       <Container className="text-center py-5" style={{ minHeight: "80vh" }}>
         <Spinner animation="border" variant="danger" />
-        <p className="mt-2 text-secondary">Caricamento dettagli Pokémon...</p>
+        <p className="mt-2 text-secondary">Loading Pokémon details...</p>
       </Container>
     );
   }
@@ -100,7 +100,7 @@ const PokemonDetails = () => {
     return (
       <Container className="text-center py-5" style={{ minHeight: "80vh" }}>
         <Alert variant="danger">
-          {error || "Dettagli Pokémon non disponibili."}
+          {error || "Pokémon details not available."}
         </Alert>
       </Container>
     );
@@ -112,19 +112,19 @@ const PokemonDetails = () => {
 
   const statsArray = [
     { name: "HP", value: pokemonData.stats.hp, variant: "success" },
-    { name: "Attacco", value: pokemonData.stats.attack, variant: "danger" },
-    { name: "Difesa", value: pokemonData.stats.defense, variant: "info" },
+    { name: "Attack", value: pokemonData.stats.attack, variant: "danger" },
+    { name: "Defense", value: pokemonData.stats.defense, variant: "info" },
     {
-      name: "Attacco Sp.",
+      name: "Attack Sp.",
       value: pokemonData.stats.specialAttack,
       variant: "warning",
     },
     {
-      name: "Difesa Sp.",
+      name: "Defense Sp.",
       value: pokemonData.stats.specialDefense,
       variant: "primary",
     },
-    { name: "Velocità", value: pokemonData.stats.speed, variant: "secondary" },
+    { name: "Speed", value: pokemonData.stats.speed, variant: "secondary" },
   ];
 
   return (
@@ -139,7 +139,7 @@ const PokemonDetails = () => {
               borderColor: "#FFCB05",
             }}
           >
-            ← Torna al Pokedex
+            ← Return to Pokédex
           </Button>
         </div>
         <div className="pokedex-title-container">
@@ -171,22 +171,22 @@ const PokemonDetails = () => {
                   onClick={() => setIsShiny(!isShiny)}
                 />
                 <p className="mt-2 text-muted fst-italic">
-                  Clicca sull'immagine per lo sprite{" "}
-                  {isShiny ? "Normale" : "Shiny"}
+                  Click on the image for the sprite{" "}
+                  {isShiny ? "Normal" : "Shiny"}
                 </p>
               </div>
 
               <Card.Body className="border-top">
                 <p>
-                  <strong className="me-2">Categoria:</strong>
+                  <strong className="me-2">Category:</strong>
                   {pokemonData.speciesCategory}
                 </p>
                 <p>
-                  <strong className="me-2">Altezza:</strong>
+                  <strong className="me-2">Height:</strong>
                   {formatHeight(pokemonData.height)}
                 </p>
                 <div className="mb-3">
-                  <strong className="me-2">Tipi:</strong>
+                  <strong className="me-2">Types:</strong>
                   {types.map((type) => (
                     <span
                       key={type.name}
@@ -198,7 +198,7 @@ const PokemonDetails = () => {
                   ))}
                 </div>
                 <Card.Text>
-                  <strong className="d-block mb-1">Descrizione:</strong>
+                  <strong className="d-block mb-1">Description:</strong>
                   {formatDescription(pokemonData.description)}
                 </Card.Text>
               </Card.Body>
@@ -207,9 +207,7 @@ const PokemonDetails = () => {
 
           <Col md={7} className="mb-4">
             <Card className="shadow-lg h-100 card-semitrasparente">
-              <Card.Header className="fs-5 fw-bold">
-                Statistiche Base
-              </Card.Header>
+              <Card.Header className="fs-5 fw-bold">Base Stats</Card.Header>
               <ListGroup variant="flush">
                 {statsArray.map((stat, index) => (
                   <ListGroup.Item
@@ -234,11 +232,11 @@ const PokemonDetails = () => {
                   </ListGroup.Item>
                 ))}
                 <ListGroup.Item className="text-end fw-bold">
-                  Totale Statistiche: {pokemonData.stats.totalStats}
+                  Total Stats: {pokemonData.stats.totalStats}
                 </ListGroup.Item>
               </ListGroup>
 
-              <Card.Header className="fs-5 fw-bold mt-3">Abilità</Card.Header>
+              <Card.Header className="fs-5 fw-bold mt-3">Abilities</Card.Header>
               <ListGroup variant="flush">
                 {pokemonData.abilities.map((ability) => (
                   <ListGroup.Item key={ability.idAbility}>
@@ -255,17 +253,17 @@ const PokemonDetails = () => {
           <Col>
             <Card className="shadow-lg card-semitrasparente">
               <Card.Header className="fs-5 fw-bold ">
-                Mosse Apprendibili ({pokemonData.learnableMoves.length})
+                Learnable Moves ({pokemonData.learnableMoves.length})
               </Card.Header>
 
               <div className="p-3">
                 <Row className="fw-bold text-white bg-dark d-none d-md-flex py-2 rounded">
-                  <Col md={3}>Nome Mossa</Col>
+                  <Col md={3}>Move Name</Col>
                   <Col md={1} className="text-center">
-                    Potenza
+                    Power
                   </Col>
                   <Col md={2} className="text-center">
-                    Precisione
+                    Accuracy
                   </Col>
                   <Col md={6}>Descrizione</Col>
                 </Row>
@@ -282,23 +280,21 @@ const PokemonDetails = () => {
                       md={3}
                       className="fw-bold text-capitalize mb-1 mb-md-0"
                     >
-                      <span className="d-md-none me-2 text-muted">Mossa:</span>
+                      <span className="d-md-none me-2 text-muted">Move:</span>
                       {move.name}
                     </Col>
 
                     <Col xs={6} md={1} className="text-md-center">
-                      <span className="d-md-none me-2 fw-bold">Potenza:</span>
+                      <span className="d-md-none me-2 fw-bold">Power:</span>
                       {move.power || "—"}
                     </Col>
                     <Col xs={6} md={2} className="text-md-center">
-                      <span className="d-md-none me-2 fw-bold">
-                        Precisione:
-                      </span>
+                      <span className="d-md-none me-2 fw-bold">Accuracy:</span>
                       {move.accuracy || "—"}
                     </Col>
                     <Col xs={12} md={6} className="mt-2 mt-md-0">
                       <span className="d-md-none me-2 fw-bold d-block">
-                        Descrizione:
+                        Description:
                       </span>
                       {move.description}
                     </Col>

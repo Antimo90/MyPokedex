@@ -12,6 +12,7 @@ import {
 import { useNavigate } from "react-router-dom";
 
 const PROFILE_API_ENDPOINT = "http://localhost:3001/users/me";
+const POKEMON_API_ENDPOINT = "http://localhost:3001/pokemon?page=0&size=151";
 
 const getToken = () => {
   let token = localStorage.getItem("token");
@@ -29,30 +30,36 @@ const getToken = () => {
 
 const Settings = () => {
   const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const [error, setError] = useState(null); // Errore generale
   const [successMessage, setSuccessMessage] = useState(null);
+
+  // Stati per Dati Utente
   const [currentUsername, setCurrentUsername] = useState("");
   const [currentEmail, setCurrentEmail] = useState("");
   const [newUsername, setNewUsername] = useState("");
   const [newEmail, setNewEmail] = useState("");
+
+  // Stati per Cambio Password
   const [oldPassword, setOldPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmNewPassword, setConfirmNewPassword] = useState("");
   const [isPasswordUpdating, setIsPasswordUpdating] = useState(false);
+  const [passwordError, setPasswordError] = useState(null); // << NOVITÀ: Errore specifico per la password
+
+  // Stati per Avatar
   const [currentAvatarUrl, setCurrentAvatarUrl] = useState(null);
   const [currentAvatarId, setCurrentAvatarId] = useState(null);
   const [allPokemon, setAllPokemon] = useState([]);
   const [selectedAvatarId, setSelectedAvatarId] = useState(null);
   const [isAvatarUpdating, setIsAvatarUpdating] = useState(false);
   const [isShiny, setIsShiny] = useState(false);
-  const navigate = useNavigate();
 
-  const POKEMON_API_ENDPOINT = "http://localhost:3001/pokemon?page=0&size=151";
+  const navigate = useNavigate();
 
   const fetchUserProfile = () => {
     const token = getToken();
     if (!token) {
-      setError("Autenticazione richiesta. Token non trovato.");
+      setError("Authentication required. Token not found.");
       setIsLoading(false);
       return;
     }
@@ -68,22 +75,28 @@ const Settings = () => {
     fetch(PROFILE_API_ENDPOINT, requestOptions)
       .then((response) => {
         if (!response.ok) {
-          throw new Error(
-            `Errore ${response.status}: Impossibile caricare il profilo.`
-          );
+          throw new Error(`Errore ${response.status}: Unable to load profile.`);
         }
         return response.json();
       })
       .then((data) => {
         setCurrentUsername(data.username);
         setCurrentEmail(data.email);
-
         setNewUsername(data.username);
         setNewEmail(data.email);
         setCurrentAvatarUrl(data.avatarUrl);
+        // Tenta di estrarre l'ID dal URL
+        const match = data.avatarUrl?.match(/\/(\d+)\.png$/);
+        if (match) {
+          setCurrentAvatarId(parseInt(match[1], 10));
+          setSelectedAvatarId(parseInt(match[1], 10));
+        } else {
+          setCurrentAvatarId(null);
+          setSelectedAvatarId(null);
+        }
       })
       .catch((err) => {
-        console.error("Errore nel caricamento del profilo utente:", err);
+        console.error("Error loading user profile:", err);
         setError(err.message);
       })
       .finally(() => {
@@ -95,14 +108,14 @@ const Settings = () => {
     fetch(POKEMON_API_ENDPOINT)
       .then((response) => {
         if (!response.ok)
-          throw new Error("Impossibile caricare i Pokémon per l'avatar.");
+          throw new Error("Unable to load Pokémon for the avatar.");
         return response.json();
       })
       .then((data) => {
         setAllPokemon(data.content || data);
       })
       .catch((err) => {
-        console.error("Errore caricamento lista Pokémon:", err);
+        console.error("Error loading Pokémon list:", err);
       });
   };
 
@@ -115,10 +128,11 @@ const Settings = () => {
     e.preventDefault();
     setSuccessMessage(null);
     setError(null);
+    setPasswordError(null); // Pulisce errore password se si cambia sezione
 
     const token = getToken();
     if (!token) {
-      setError("Token di autenticazione mancante.");
+      setError("Missing authentication token.");
       return;
     }
 
@@ -141,7 +155,7 @@ const Settings = () => {
         const errorData = await response.json();
         throw new Error(
           errorData.message ||
-            `Errore ${response.status}: Impossibile aggiornare il profilo.`
+            `Errore ${response.status}: Unable to update profile.`
         );
       }
 
@@ -152,10 +166,10 @@ const Settings = () => {
       setNewUsername(updatedUser.username);
       setNewEmail(updatedUser.email);
 
-      setSuccessMessage("Profilo aggiornato con successo!");
+      setSuccessMessage("Profile updated successfully!");
     } catch (err) {
-      console.error("Errore aggiornamento profilo:", err);
-      setError(err.message || "Aggiornamento fallito.");
+      console.error("Profile update error:", err);
+      setError(err.message || "Update failed.");
     }
   };
 
@@ -163,19 +177,23 @@ const Settings = () => {
     e.preventDefault();
     setSuccessMessage(null);
     setError(null);
+    setPasswordError(null); // Pulisce l'errore precedente
     setIsPasswordUpdating(true);
 
     const token = getToken();
     if (!token) {
-      setError("Token di autenticazione mancante.");
+      setError("Missing authentication token.");
       setIsPasswordUpdating(false);
       return;
     }
 
     if (newPassword !== confirmNewPassword) {
-      setError("La nuova password e la conferma non corrispondono.");
+      setPasswordError("The new password and confirmation do not match.");
       setIsPasswordUpdating(false);
-      return;
+      setOldPassword("");
+      setNewPassword("");
+      setConfirmNewPassword("");
+      return; // Blocca l'esecuzione e mostra l'errore localizzato
     }
 
     const body = {
@@ -194,21 +212,23 @@ const Settings = () => {
       });
 
       if (response.status === 204) {
-        setSuccessMessage("Password aggiornata con successo!");
+        setSuccessMessage("Password updated successfully!");
 
+        // Pulisce i campi al successo
         setOldPassword("");
         setNewPassword("");
         setConfirmNewPassword("");
       } else {
         const errorData = await response.json();
-        throw new Error(
+        const errorMessage =
           errorData.message ||
-            `Errore ${response.status}: Impossibile cambiare password.`
-        );
+          `Errore ${response.status}: Unable to change password.`;
+        setPasswordError(errorMessage);
+        console.error("API Error:", errorMessage);
       }
     } catch (err) {
-      console.error("Errore cambio password:", err);
-      setError(err.message || "Aggiornamento password fallito.");
+      console.error("Password change error:", err);
+      setPasswordError(err.message || "Password update failed.");
     } finally {
       setIsPasswordUpdating(false);
     }
@@ -218,17 +238,12 @@ const Settings = () => {
     e.preventDefault();
     setSuccessMessage(null);
     setError(null);
+    setPasswordError(null);
     setIsAvatarUpdating(true);
 
     const token = getToken();
     if (!token) {
-      setError("Token di autenticazione mancante.");
-      setIsAvatarUpdating(false);
-      return;
-    }
-
-    if (selectedAvatarId === currentAvatarId) {
-      setSuccessMessage("Avatar già impostato su questo Pokémon.");
+      setError("Missing authentication token.");
       setIsAvatarUpdating(false);
       return;
     }
@@ -252,7 +267,7 @@ const Settings = () => {
         const errorData = await response.json();
         throw new Error(
           errorData.message ||
-            `Errore ${response.status}: Impossibile aggiornare l'avatar.`
+            `Errore ${response.status}: Unable to update avatar.`
         );
       }
 
@@ -260,13 +275,14 @@ const Settings = () => {
 
       setCurrentAvatarUrl(updatedUser.avatarUrl);
 
+      // Aggiorna l'ID corrente
       const match = updatedUser.avatarUrl.match(/\/(\d+)\.png$/);
       setCurrentAvatarId(match ? parseInt(match[1], 10) : selectedAvatarId);
 
-      setSuccessMessage("Avatar aggiornato con successo!");
+      setSuccessMessage("Avatar updated successfully!");
     } catch (err) {
       console.error("Errore aggiornamento avatar:", err);
-      setError(err.message || "Aggiornamento avatar fallito.");
+      setError(err.message || "Avatar update failed.");
     } finally {
       setIsAvatarUpdating(false);
     }
@@ -276,11 +292,12 @@ const Settings = () => {
     return (
       <div className="text-center mt-5">
         <Spinner animation="border" variant="danger" />
-        <p className="text-secondary mt-2">Caricamento impostazioni...</p>
+        <p className="text-secondary mt-2">Loading settings...</p>
       </div>
     );
   }
 
+  // L'errore generale lo mostriamo solo se non c'è un messaggio di successo
   if (error && !successMessage) {
     return (
       <Container className="py-5">
@@ -309,11 +326,11 @@ const Settings = () => {
               borderColor: "#FFCB05",
             }}
           >
-            ← Torna al Pokedex
+            ← Return to Pokédex
           </Button>
         </div>
         <h2 className="mb-4 text-center" style={{ color: "#FFCB05" }}>
-          ⚙️ Impostazioni Utente
+          ⚙️ User Settings
         </h2>
         <hr style={{ borderColor: "#FFCB05" }} />
 
@@ -338,7 +355,7 @@ const Settings = () => {
               }}
             >
               <h4 className="mb-3" style={{ color: "#FFCB05" }}>
-                Modifica Username ed Email
+                Change Username and Email
               </h4>
               <Form onSubmit={handleProfileUpdate}>
                 <Form.Group className="mb-3">
@@ -348,7 +365,7 @@ const Settings = () => {
                       borderColor: "#495057",
                     }}
                   >
-                    Username attuale: **{currentUsername}**
+                    Current Username: {currentUsername}
                   </Form.Label>
                   <Form.Control
                     type="text"
@@ -369,7 +386,7 @@ const Settings = () => {
                       borderColor: "#495057",
                     }}
                   >
-                    Email attuale: **{currentEmail}**
+                    Current Email: {currentEmail}
                   </Form.Label>
                   <Form.Control
                     type="email"
@@ -384,7 +401,7 @@ const Settings = () => {
                   />
                 </Form.Group>
                 <Button variant="danger" type="submit" className="mt-2 w-100">
-                  Salva Profilo
+                  Save Profile
                 </Button>
               </Form>
             </Card>
@@ -399,8 +416,15 @@ const Settings = () => {
               }}
             >
               <h4 className="mb-3" style={{ color: "#FFCB05" }}>
-                Cambia Password
+                Change Password
               </h4>
+
+              {passwordError && (
+                <Alert variant="danger" className="mb-3">
+                  {passwordError}
+                </Alert>
+              )}
+
               <Form onSubmit={handleChangePassword}>
                 <Form.Group className="mb-3">
                   <Form.Label
@@ -409,7 +433,7 @@ const Settings = () => {
                       borderColor: "#495057",
                     }}
                   >
-                    Password Attuale
+                    Current Password
                   </Form.Label>
                   <Form.Control
                     type="password"
@@ -431,7 +455,7 @@ const Settings = () => {
                       borderColor: "#495057",
                     }}
                   >
-                    Nuova Password
+                    New Password
                   </Form.Label>
                   <Form.Control
                     type="password"
@@ -454,7 +478,7 @@ const Settings = () => {
                       borderColor: "#495057",
                     }}
                   >
-                    Conferma Nuova Password
+                    Confirm New Password
                   </Form.Label>
                   <Form.Control
                     type="password"
@@ -478,7 +502,7 @@ const Settings = () => {
                   {isPasswordUpdating ? (
                     <Spinner animation="border" size="sm" className="me-2" />
                   ) : (
-                    "Aggiorna Password"
+                    "Update Password"
                   )}
                 </Button>
               </Form>
@@ -494,14 +518,14 @@ const Settings = () => {
               }}
             >
               <h4 className="mb-3" style={{ color: "#FFCB05" }}>
-                Modifica Avatar
+                Change Avatar
               </h4>
               <Form onSubmit={handleAvatarUpdate}>
                 <div className="text-center mb-3">
                   {currentAvatarUrl && (
                     <img
                       src={currentAvatarUrl}
-                      alt="Avatar attuale"
+                      alt="Current Avatar"
                       style={{
                         width: "120px",
                         height: "120px",
@@ -519,7 +543,7 @@ const Settings = () => {
                       borderColor: "#495057",
                     }}
                   >
-                    Avatar attuale (ID: {currentAvatarId})
+                    Current Avatar (ID: {currentAvatarId})
                   </p>
                 </div>
 
@@ -530,7 +554,7 @@ const Settings = () => {
                       borderColor: "#495057",
                     }}
                   >
-                    Seleziona Nuovo Avatar (Pokémon)
+                    Select New Avatar (Pokémon)
                   </Form.Label>
                   <Form.Select
                     value={selectedAvatarId || ""}
@@ -546,7 +570,7 @@ const Settings = () => {
                     }}
                   >
                     <option value="" disabled>
-                      Scegli un Pokémon
+                      Choose a Pokémon
                     </option>
                     {allPokemon.map((p) => (
                       <option key={p.idPokemon} value={p.idPokemon}>
@@ -558,7 +582,7 @@ const Settings = () => {
                 <Form.Group className="mb-3" controlId="formShinyAvatar">
                   <Form.Check
                     type="checkbox"
-                    label="Versione Shiny ✨"
+                    label="Shiny Version ✨"
                     checked={isShiny}
                     onChange={(e) => setIsShiny(e.target.checked)}
                     disabled={isAvatarUpdating}
@@ -575,7 +599,7 @@ const Settings = () => {
                   {isAvatarUpdating ? (
                     <Spinner animation="border" size="sm" className="me-2" />
                   ) : (
-                    "Aggiorna Avatar"
+                    "Update Avatar"
                   )}
                 </Button>
               </Form>
