@@ -12,6 +12,7 @@ import {
 import { useNavigate } from "react-router-dom";
 
 const PROFILE_API_ENDPOINT = "http://localhost:3001/users/me";
+const POKEMON_API_ENDPOINT = "http://localhost:3001/pokemon?page=0&size=151";
 
 const getToken = () => {
   let token = localStorage.getItem("token");
@@ -29,25 +30,31 @@ const getToken = () => {
 
 const Settings = () => {
   const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const [error, setError] = useState(null); // Errore generale
   const [successMessage, setSuccessMessage] = useState(null);
+
+  // Stati per Dati Utente
   const [currentUsername, setCurrentUsername] = useState("");
   const [currentEmail, setCurrentEmail] = useState("");
   const [newUsername, setNewUsername] = useState("");
   const [newEmail, setNewEmail] = useState("");
+
+  // Stati per Cambio Password
   const [oldPassword, setOldPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmNewPassword, setConfirmNewPassword] = useState("");
   const [isPasswordUpdating, setIsPasswordUpdating] = useState(false);
+  const [passwordError, setPasswordError] = useState(null); // << NOVITÀ: Errore specifico per la password
+
+  // Stati per Avatar
   const [currentAvatarUrl, setCurrentAvatarUrl] = useState(null);
   const [currentAvatarId, setCurrentAvatarId] = useState(null);
   const [allPokemon, setAllPokemon] = useState([]);
   const [selectedAvatarId, setSelectedAvatarId] = useState(null);
   const [isAvatarUpdating, setIsAvatarUpdating] = useState(false);
   const [isShiny, setIsShiny] = useState(false);
-  const navigate = useNavigate();
 
-  const POKEMON_API_ENDPOINT = "http://localhost:3001/pokemon?page=0&size=151";
+  const navigate = useNavigate();
 
   const fetchUserProfile = () => {
     const token = getToken();
@@ -75,10 +82,18 @@ const Settings = () => {
       .then((data) => {
         setCurrentUsername(data.username);
         setCurrentEmail(data.email);
-
         setNewUsername(data.username);
         setNewEmail(data.email);
         setCurrentAvatarUrl(data.avatarUrl);
+        // Tenta di estrarre l'ID dal URL
+        const match = data.avatarUrl?.match(/\/(\d+)\.png$/);
+        if (match) {
+          setCurrentAvatarId(parseInt(match[1], 10));
+          setSelectedAvatarId(parseInt(match[1], 10));
+        } else {
+          setCurrentAvatarId(null);
+          setSelectedAvatarId(null);
+        }
       })
       .catch((err) => {
         console.error("Error loading user profile:", err);
@@ -113,6 +128,7 @@ const Settings = () => {
     e.preventDefault();
     setSuccessMessage(null);
     setError(null);
+    setPasswordError(null); // Pulisce errore password se si cambia sezione
 
     const token = getToken();
     if (!token) {
@@ -161,6 +177,7 @@ const Settings = () => {
     e.preventDefault();
     setSuccessMessage(null);
     setError(null);
+    setPasswordError(null); // Pulisce l'errore precedente
     setIsPasswordUpdating(true);
 
     const token = getToken();
@@ -171,9 +188,12 @@ const Settings = () => {
     }
 
     if (newPassword !== confirmNewPassword) {
-      setError("The new password and confirmation do not match.");
+      setPasswordError("The new password and confirmation do not match.");
       setIsPasswordUpdating(false);
-      return;
+      setOldPassword("");
+      setNewPassword("");
+      setConfirmNewPassword("");
+      return; // Blocca l'esecuzione e mostra l'errore localizzato
     }
 
     const body = {
@@ -194,19 +214,21 @@ const Settings = () => {
       if (response.status === 204) {
         setSuccessMessage("Password updated successfully!");
 
+        // Pulisce i campi al successo
         setOldPassword("");
         setNewPassword("");
         setConfirmNewPassword("");
       } else {
         const errorData = await response.json();
-        throw new Error(
+        const errorMessage =
           errorData.message ||
-            `Errore ${response.status}: Unable to change password.`
-        );
+          `Errore ${response.status}: Unable to change password.`;
+        setPasswordError(errorMessage);
+        console.error("API Error:", errorMessage);
       }
     } catch (err) {
       console.error("Password change error:", err);
-      setError(err.message || "Password update failed.");
+      setPasswordError(err.message || "Password update failed.");
     } finally {
       setIsPasswordUpdating(false);
     }
@@ -216,17 +238,12 @@ const Settings = () => {
     e.preventDefault();
     setSuccessMessage(null);
     setError(null);
+    setPasswordError(null);
     setIsAvatarUpdating(true);
 
     const token = getToken();
     if (!token) {
       setError("Missing authentication token.");
-      setIsAvatarUpdating(false);
-      return;
-    }
-
-    if (selectedAvatarId === currentAvatarId) {
-      setSuccessMessage("Avatar already set to this Pokémon.");
       setIsAvatarUpdating(false);
       return;
     }
@@ -258,6 +275,7 @@ const Settings = () => {
 
       setCurrentAvatarUrl(updatedUser.avatarUrl);
 
+      // Aggiorna l'ID corrente
       const match = updatedUser.avatarUrl.match(/\/(\d+)\.png$/);
       setCurrentAvatarId(match ? parseInt(match[1], 10) : selectedAvatarId);
 
@@ -279,6 +297,7 @@ const Settings = () => {
     );
   }
 
+  // L'errore generale lo mostriamo solo se non c'è un messaggio di successo
   if (error && !successMessage) {
     return (
       <Container className="py-5">
@@ -346,10 +365,11 @@ const Settings = () => {
                       borderColor: "#495057",
                     }}
                   >
-                    Current Username: **{currentUsername}**
+                    Current Username: {currentUsername}
                   </Form.Label>
                   <Form.Control
                     type="text"
+                    value={newUsername}
                     onChange={(e) => setNewUsername(e.target.value)}
                     required
                     style={{
@@ -366,10 +386,11 @@ const Settings = () => {
                       borderColor: "#495057",
                     }}
                   >
-                    Current Email: **{currentEmail}**
+                    Current Email: {currentEmail}
                   </Form.Label>
                   <Form.Control
                     type="email"
+                    value={newEmail}
                     onChange={(e) => setNewEmail(e.target.value)}
                     required
                     style={{
@@ -397,6 +418,13 @@ const Settings = () => {
               <h4 className="mb-3" style={{ color: "#FFCB05" }}>
                 Change Password
               </h4>
+
+              {passwordError && (
+                <Alert variant="danger" className="mb-3">
+                  {passwordError}
+                </Alert>
+              )}
+
               <Form onSubmit={handleChangePassword}>
                 <Form.Group className="mb-3">
                   <Form.Label
