@@ -125,7 +125,7 @@ public class UserService {
         // Aggiorno i campi.
         userFound.setUsername(payload.username());
         userFound.setEmail(payload.email());
-
+        mailgunSender.sendProfileUpdateEmail(userFound);
         // Salvo l'utente aggiornato.
         return this.userRepository.save(userFound);
     }
@@ -158,6 +158,8 @@ public class UserService {
 
         // Codifico e imposto la nuova password.
         userFound.setPassword(bcrypt.encode(payload.newPassword()));
+
+        mailgunSender.sendProfileUpdateEmail(userFound);
 
         // Salvo l'utente con la nuova password.
         userRepository.save(userFound);
@@ -216,6 +218,7 @@ public class UserService {
 
         // 2. Aggiorna l'URL dell'avatar.
         userFound.setAvatarUrl(newAvatarUrl);
+        mailgunSender.sendProfileUpdateEmail(userFound);
 
         return this.userRepository.save(userFound);
     }

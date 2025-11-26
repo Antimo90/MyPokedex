@@ -23,7 +23,19 @@ public class MailgunSender {
                 .queryString("from", "gioco2.g@gmail.com")
                 .queryString("to", recipient.getEmail())
                 .queryString("subject", "Registration completed")
-                .queryString("text", "Welcome to our platform, we hope you can complete your Pokédex!")
+                .queryString("text", "Welcome " + recipient.getUsername() + " to our platform, we hope you can complete your Pokédex!")
+                .asJson();
+    }
+
+    public void sendProfileUpdateEmail(User recipient) {
+        Unirest.post("https://api.mailgun.net/v3/" + this.domain + "/messages")
+                .basicAuth("api", this.apiKey)
+                .queryString("from", "gioco2.g@gmail.com")
+                .queryString("to", recipient.getEmail())
+                .queryString("subject", "Profile updated successfully") // Oggetto modificato
+                .queryString("text", "Hello " + recipient.getUsername() +
+                        ", your profile information has been successfully updated. " +
+                        "If you did not request this change, please contact support immediately.") // Corpo modificato
                 .asJson();
     }
 }
