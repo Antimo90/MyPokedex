@@ -4,11 +4,10 @@ import antimomandorino.mypokedex.repositories.PokemonRepository;
 import antimomandorino.mypokedex.services.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
-import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
 @Component
-@Profile("seeding")
+
 public class DataLoader implements CommandLineRunner {
 
     @Autowired
