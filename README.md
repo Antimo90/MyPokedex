@@ -1,4 +1,5 @@
 💎 MyPokedex: Il Tracker di Kanto 🌿
+
 Un Pokedex web Full Stack, moderno e interattivo, incentrato sui 151 Pokémon originali, con una funzionalità unica di tracker per la collezione personale.
 
 🌟 Panoramica del Progetto
