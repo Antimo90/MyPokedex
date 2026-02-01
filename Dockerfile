@@ -17,4 +17,4 @@ RUN ./mvnw clean package -DskipTests
 Expose 3001
 
 # Run the generated JAR file
-CMD["java", "-jar", "target/mypokedex-0.0.1-SNAPSHOT.jar"]
+CMD ["java", "-jar", "target/mypokedex-0.0.1-SNAPSHOT.jar"]
