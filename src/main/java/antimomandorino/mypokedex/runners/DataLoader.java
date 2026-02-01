@@ -36,21 +36,21 @@ public class DataLoader implements CommandLineRunner {
         System.out.println("----- Avvio DataLoader Seeding Iniziale -----");
 
         System.out.println("1. Popolamento Ruoli...");
-        roleService.findOrCreateRole("USER");
-        roleService.findOrCreateRole("ADMIN");
-        userService.seedAdminUser();
+        //    roleService.findOrCreateRole("USER");
+        //    roleService.findOrCreateRole("ADMIN");
+        //    userService.seedAdminUser();
 
         System.out.println("2a. Popolamento Tipi...");
-        typeService.importAllTypes();
+        //   typeService.importAllTypes();
 
         System.out.println("2b. Popolamento Abilità...");
-        abilityService.importAllAbilities();
+        //   abilityService.importAllAbilities();
 
         System.out.println("2b. Popolamento Mosse...");
-        moveService.importAllMoves();
+        //   moveService.importAllMoves();
 
         System.out.println("3. Popolamento Pokémon di Kanto (1-151)...");
-        pokemonService.importKantoPokemon();
+        //  pokemonService.importKantoPokemon();
 
 
         System.out.println("----- Seeding Iniziale Completato con successo! -----");
