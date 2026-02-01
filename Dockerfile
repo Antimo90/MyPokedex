@@ -8,7 +8,7 @@ WORKDIR /app
 COPY . .
 
 # Make sure the Maven wrapper is executable
-RUN chmod+x mvnw
+RUN chmod +x mvnw
 
 # Build the SpringBoot application
 RUN ./mvnw clean package -DskipTests
