@@ -228,5 +228,6 @@ public class PokemonService {
             throw new RuntimeException("Errore di Cloudinary durante l'upload: " + e.getMessage());
         }
 
+
     }
 }
