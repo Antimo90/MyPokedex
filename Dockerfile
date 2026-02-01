@@ -5,7 +5,7 @@ FROM eclipse-temurin:21-jdk-jammy
 WORKDIR /app
 
 # Copy the entire backend source code and Maven wrapper into the container
-COPY. .
+COPY . .
 
 # Make sure the Maven wrapper is executable
 RUN chmod+x mvnw
