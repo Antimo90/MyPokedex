@@ -11,7 +11,8 @@ import {
 import sfondo from "../assets/SfondoRegistrazione.jpg";
 
 // Definisco l'endpoint API per la richiesta di registrazione
-const REGISTER_API_ENDPOINT = "http://localhost:3001/auths/register";
+const REGISTER_API_ENDPOINT =
+  "https://mypokedex-axtn.onrender.com/auths/register";
 
 const MyRegister = () => {
   // Stato per i dati del form
@@ -116,7 +117,7 @@ const MyRegister = () => {
         // Gestione degli errori HTTP, creo un oggetto Error con status e messaggio
         return response.json().then((errorData) => {
           const error = new Error(
-            errorData.message || `Errore HTTP: ${response.status}`
+            errorData.message || `Errore HTTP: ${response.status}`,
           );
           error.status = response.status;
           error.data = errorData;
@@ -147,7 +148,7 @@ const MyRegister = () => {
         } else {
           // Errore di connessione / rete
           setServerError(
-            "Unable to connect to the server. Check your connection."
+            "Unable to connect to the server. Check your connection.",
           );
         }
       })

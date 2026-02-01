@@ -11,8 +11,9 @@ import {
 } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 
-const PROFILE_API_ENDPOINT = "http://localhost:3001/users/me";
-const POKEMON_API_ENDPOINT = "http://localhost:3001/pokemon?page=0&size=151";
+const PROFILE_API_ENDPOINT = "https://mypokedex-axtn.onrender.com/users/me";
+const POKEMON_API_ENDPOINT =
+  "https://mypokedex-axtn.onrender.com/pokemon?page=0&size=151";
 
 const getToken = () => {
   let token = localStorage.getItem("token");
@@ -155,7 +156,7 @@ const Settings = () => {
         const errorData = await response.json();
         throw new Error(
           errorData.message ||
-            `Errore ${response.status}: Unable to update profile.`
+            `Errore ${response.status}: Unable to update profile.`,
         );
       }
 
@@ -267,7 +268,7 @@ const Settings = () => {
         const errorData = await response.json();
         throw new Error(
           errorData.message ||
-            `Errore ${response.status}: Unable to update avatar.`
+            `Errore ${response.status}: Unable to update avatar.`,
         );
       }
 

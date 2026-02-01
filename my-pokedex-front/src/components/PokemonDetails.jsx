@@ -31,7 +31,7 @@ const PokemonDetails = () => {
   };
 
   const fetchPokemonDetails = () => {
-    const POKEMON_DETAIL_ENDPOINT = `http://localhost:3001/pokemon/${idPokemon}`;
+    const POKEMON_DETAIL_ENDPOINT = `https://mypokedex-axtn.onrender.com/pokemon/${idPokemon}`;
 
     let tokenString = localStorage.getItem("token");
     let finalToken = null;
@@ -63,7 +63,7 @@ const PokemonDetails = () => {
       .then((response) => {
         if (!response.ok) {
           throw new Error(
-            `Errore ${response.status}: Unable to load Pokémon details.`
+            `Errore ${response.status}: Unable to load Pokémon details.`,
           );
         }
         return response.json();

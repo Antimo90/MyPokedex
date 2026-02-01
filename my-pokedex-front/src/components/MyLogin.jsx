@@ -12,7 +12,7 @@ import { useNavigate } from "react-router-dom";
 import sfondo2 from "../assets/sfondoLogin2.jpg";
 
 // Definisco l'endpoint API per la richiesta di login
-const LOGIN_API_ENDPOINT = "http://localhost:3001/auths/login";
+const LOGIN_API_ENDPOINT = "https://mypokedex-axtn.onrender.com/auths/login";
 
 const MyLogin = () => {
   // Inizializzo l'hook per la navigazione
@@ -103,7 +103,7 @@ const MyLogin = () => {
         return response.json().then((errorData) => {
           // Creo un oggetto Error personalizzato per la gestione successiva nel .catch
           const error = new Error(
-            errorData.message || `Errore HTTP: ${response.status}`
+            errorData.message || `Errore HTTP: ${response.status}`,
           );
           error.status = response.status;
           throw error; // Lancio l'errore
@@ -133,12 +133,12 @@ const MyLogin = () => {
         } else if (error.status) {
           // Altri errori server (e.g., 500)
           setServerError(
-            `Errore del server (${error.status}). Try again later.`
+            `Errore del server (${error.status}). Try again later.`,
           );
         } else {
           // Errore di rete (es. server spento o connessione assente)
           setServerError(
-            "Unable to connect to the server. Check your connection."
+            "Unable to connect to the server. Check your connection.",
           );
         }
       })

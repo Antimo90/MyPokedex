@@ -4,7 +4,8 @@ import { useNavigate } from "react-router-dom";
 import PokemonCard from "./PokemonCard.jsx";
 
 // Endpoint API per recuperare la lista di Pokémon
-const POKEMON_API_ENDPOINT = "http://localhost:3001/pokemon?page=0&size=151";
+const POKEMON_API_ENDPOINT =
+  "https://mypokedex-axtn.onrender.com/pokemon?page=0&size=151";
 
 const Pokedex = () => {
   // Stato per memorizzare l'elenco dei Pokémon

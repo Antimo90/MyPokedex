@@ -4,9 +4,11 @@ import { useNavigate, useLocation } from "react-router-dom";
 import PokemonCardUser from "./PokemonCardUser.jsx";
 
 // Definisco gli endpoint API principali
-const POKEMON_API_ENDPOINT = "http://localhost:3001/pokemon?page=0&size=151";
-const COLLECTION_API_ENDPOINT = "http://localhost:3001/users/me/collection";
-const PROFILE_API_ENDPOINT = "http://localhost:3001/users/me";
+const POKEMON_API_ENDPOINT =
+  "https://mypokedex-axtn.onrender.com/pokemon?page=0&size=151";
+const COLLECTION_API_ENDPOINT =
+  "https://mypokedex-axtn.onrender.com/users/me/collection";
+const PROFILE_API_ENDPOINT = "https://mypokedex-axtn.onrender.com/users/me";
 
 const getToken = () => {
   let token = localStorage.getItem("token");
@@ -111,7 +113,7 @@ const PokedexUser = () => {
       .then((response) => {
         if (!response.ok) {
           throw new Error(
-            `Errore ${response.status}: Unable to load collection.`
+            `Errore ${response.status}: Unable to load collection.`,
           );
         }
         return response.json();
@@ -193,7 +195,7 @@ const PokedexUser = () => {
             return response.json().then((errorData) => {
               throw new Error(
                 errorData.message ||
-                  `Error API: ${response.status} ${response.statusText}`
+                  `Error API: ${response.status} ${response.statusText}`,
               );
             });
           }
@@ -235,7 +237,7 @@ const PokedexUser = () => {
     ? pokemonList.filter(
         (pokemon) =>
           pokemon.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          String(pokemon.idPokemon) === searchQuery.trim()
+          String(pokemon.idPokemon) === searchQuery.trim(),
       )
     : pokemonList;
 
