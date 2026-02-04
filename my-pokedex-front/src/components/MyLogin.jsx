@@ -8,7 +8,7 @@ import {
   Col,
   Alert,
 } from "react-bootstrap";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import sfondo2 from "../assets/sfondoLogin2.jpg";
 
 // Definisco l'endpoint API per la richiesta di login
@@ -270,12 +270,12 @@ const MyLogin = () => {
                     {/* Link per la Registrazione */}
                     <p className="mt-3 text-center text-white small">
                       Don't have an account?{" "}
-                      <a
-                        href="/register"
+                      <Link
+                        to="/register"
                         className="text-primary text-decoration-none"
                       >
                         Sign up here
-                      </a>
+                      </Link>
                     </p>
                   </Form>
                 </Card.Body>
