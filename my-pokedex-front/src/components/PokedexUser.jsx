@@ -5,10 +5,10 @@ import PokemonCardUser from "./PokemonCardUser.jsx";
 
 // Definisco gli endpoint API principali
 const POKEMON_API_ENDPOINT =
-  "https://mypokedex-axtn.onrender.com/pokemon?page=0&size=151";
+  "https://mypokedex-1-fimv.onrender.com/pokemon?page=0&size=151";
 const COLLECTION_API_ENDPOINT =
-  "https://mypokedex-axtn.onrender.com/users/me/collection";
-const PROFILE_API_ENDPOINT = "https://mypokedex-axtn.onrender.com/users/me";
+  "https://mypokedex-1-fimv.onrender.com/users/me/collection";
+const PROFILE_API_ENDPOINT = "https://mypokedex-1-fimv.onrender.com/users/me";
 
 const getToken = () => {
   let token = localStorage.getItem("token");

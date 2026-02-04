@@ -12,7 +12,7 @@ import sfondo from "../assets/SfondoRegistrazione.jpg";
 
 // Definisco l'endpoint API per la richiesta di registrazione
 const REGISTER_API_ENDPOINT =
-  "https://mypokedex-axtn.onrender.com/auths/register";
+  "https://mypokedex-1-fimv.onrender.com/auths/register";
 
 const MyRegister = () => {
   // Stato per i dati del form

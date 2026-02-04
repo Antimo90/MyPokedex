@@ -11,9 +11,9 @@ import {
 } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 
-const PROFILE_API_ENDPOINT = "https://mypokedex-axtn.onrender.com/users/me";
+const PROFILE_API_ENDPOINT = "https://mypokedex-1-fimv.onrender.com/users/me";
 const POKEMON_API_ENDPOINT =
-  "https://mypokedex-axtn.onrender.com/pokemon?page=0&size=151";
+  "https://mypokedex-1-fimv.onrender.com/pokemon?page=0&size=151";
 
 const getToken = () => {
   let token = localStorage.getItem("token");

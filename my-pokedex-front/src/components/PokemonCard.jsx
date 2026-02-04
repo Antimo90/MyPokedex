@@ -1,5 +1,5 @@
 import { Card } from "react-bootstrap";
-import { Link } from "react-router-dom"; // Mantengo Link importato ma commentato
+import { Link } from "react-router-dom";
 
 const PokemonCard = ({ pokemon }) => {
   const formatId = (id) => {
@@ -18,19 +18,9 @@ const PokemonCard = ({ pokemon }) => {
     types.push(pokemon.type2);
   }
 
-  // const detailLink = `/pokemon/${pokemon.idPokemon}`; // COMMENTATO
-
   return (
     <Card className="text-center h-100 shadow-sm pokemon-card-custom-final">
-      {/*  IL LINK DI NAVIGAZIONE */}
-      {/* <Link
-        to={detailLink}
-        style={{ textDecoration: "none", color: "inherit" }}
-      > */}
-      {/* SOSTITUITO CON UN DIV SEMPLICE PER MANTENERE IL LAYOUT */}
-      <div
-      // style={{ textDecoration: "none", color: "inherit" }} // Mantengo lo stile di colore
-      >
+      <div>
         <div className="pokemon-card-image-container-final">
           <div className="pokemon-card-image-circle"></div>
           <Card.Img
@@ -71,8 +61,6 @@ const PokemonCard = ({ pokemon }) => {
           </div>
         </Card.Body>
       </div>
-      {/* FINE SEZIONE COMMENTATA: CHIUSURA LINK */}
-      {/* </Link> */}
     </Card>
   );
 };

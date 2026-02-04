@@ -31,7 +31,7 @@ const PokemonDetails = () => {
   };
 
   const fetchPokemonDetails = () => {
-    const POKEMON_DETAIL_ENDPOINT = `https://mypokedex-axtn.onrender.com/pokemon/${idPokemon}`;
+    const POKEMON_DETAIL_ENDPOINT = `https://mypokedex-1-fimv.onrender.com/pokemon/${idPokemon}`;
 
     let tokenString = localStorage.getItem("token");
     let finalToken = null;

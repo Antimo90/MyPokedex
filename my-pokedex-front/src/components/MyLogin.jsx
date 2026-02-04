@@ -12,7 +12,7 @@ import { useNavigate } from "react-router-dom";
 import sfondo2 from "../assets/sfondoLogin2.jpg";
 
 // Definisco l'endpoint API per la richiesta di login
-const LOGIN_API_ENDPOINT = "https://mypokedex-axtn.onrender.com/auths/login";
+const LOGIN_API_ENDPOINT = "https://mypokedex-1-fimv.onrender.com/auths/login";
 
 const MyLogin = () => {
   // Inizializzo l'hook per la navigazione
