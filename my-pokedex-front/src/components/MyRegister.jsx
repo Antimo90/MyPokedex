@@ -189,8 +189,8 @@ const MyRegister = () => {
                   {/* Visualizzazione Successo Registrazione */}
                   {registrationSuccess && (
                     <Alert variant="success" className="text-center">
-                      Registration successful! Go to <a href="/login">Login</a>.{" "}
-                      {/* Link per il login */}
+                      Registration successful! Go to{" "}
+                      <Link to="/login">Login</Link>. {/* Link per il login */}
                     </Alert>
                   )}
                   {/* Form di Registrazione */}
