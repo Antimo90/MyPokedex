@@ -9,6 +9,7 @@ import {
   Alert,
 } from "react-bootstrap";
 import sfondo from "../assets/SfondoRegistrazione.jpg";
+import { Link } from "react-router-dom";
 
 // Definisco l'endpoint API per la richiesta di registrazione
 const REGISTER_API_ENDPOINT =
